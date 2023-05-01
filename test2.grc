@@ -116,7 +116,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1256, 1372.0]
+    coordinate: [1328, 1348.0]
     rotation: 0
     state: enabled
 - name: analog_noise_source_x_0
@@ -124,7 +124,7 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    amp: '0.8'
+    amp: '20'
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -135,9 +135,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [896, 1492.0]
+    coordinate: [896, 1508.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: analog_sig_source_x_0
   id: analog_sig_source_x
   parameters:
@@ -263,9 +263,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1152, 1480.0]
+    coordinate: [1160, 1480.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: blocks_and_xx_0
   id: blocks_and_xx
   parameters:
@@ -298,7 +298,7 @@ blocks:
     bus_structure: null
     coordinate: [1552, 1136.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: blocks_complex_to_float_1
   id: blocks_complex_to_float
   parameters:
@@ -312,16 +312,16 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1456, 1328.0]
+    coordinate: [1608, 1344.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: blocks_delay_0
   id: blocks_delay
   parameters:
     affinity: ''
     alias: ''
     comment: ''
-    delay: '15000'
+    delay: '2000'
     maxoutbuf: '0'
     minoutbuf: '0'
     num_ports: '1'
@@ -331,7 +331,26 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1080, 1008.0]
+    coordinate: [1040, 1096.0]
+    rotation: 0
+    state: enabled
+- name: blocks_delay_1
+  id: blocks_delay
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    delay: '0'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_ports: '1'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [792, 1344.0]
     rotation: 0
     state: true
 - name: blocks_null_sink_0
@@ -367,7 +386,7 @@ blocks:
     bus_structure: null
     coordinate: [1928, 1352.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: blocks_null_sink_2
   id: blocks_null_sink
   parameters:
@@ -382,7 +401,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1968, 1264.0]
+    coordinate: [1976, 1256.0]
     rotation: 0
     state: disabled
 - name: blocks_null_sink_2_0
@@ -401,7 +420,7 @@ blocks:
     bus_structure: null
     coordinate: [1848, 1448.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: blocks_stream_mux_0
   id: blocks_stream_mux
   parameters:
@@ -418,7 +437,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1088, 792.0]
+    coordinate: [896, 856.0]
     rotation: 0
     state: true
 - name: blocks_stream_mux_0_0
@@ -437,9 +456,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [896, 1176.0]
+    coordinate: [576, 1304.0]
     rotation: 0
-    state: true
+    state: disabled
 - name: blocks_stream_to_vector_0
   id: blocks_stream_to_vector
   parameters:
@@ -567,7 +586,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [904, 1280.0]
+    coordinate: [1024, 1264.0]
     rotation: 0
     state: disabled
 - name: epy_block_0
@@ -611,24 +630,28 @@ blocks:
     _source_code: "import numpy as np\nfrom gnuradio import gr\nimport scipy as sp\n\
       \nclass CorrelationDelayEstimator(gr.sync_block):\n    def __init__(self, vectorsize=18750,sample_rate=50000):\n\
       \        gr.sync_block.__init__(\n            self,\n            name='CorrelationDelayEstimator',\n\
-      \            in_sig=[np.complex64, np.complex64],\n            out_sig=[np.float32,np.float32]\n\
+      \            in_sig=[np.complex64, np.complex64],\n            out_sig=[np.float32]\n\
       \        )\n        self.vectorsize = vectorsize\n        self.range_clock_signal\
       \ = np.zeros(vectorsize, dtype=np.complex64)\n        self.sequential_signal\
-      \ = np.zeros(vectorsize, dtype=np.complex64)\n        self.i = 0\n        self.max\
-      \ = 0\n        self.sample_delay_count = 0\n        self.correlation_values\
+      \ = np.zeros(vectorsize, dtype=np.complex64)\n        self.i = 0\n       # self.j=0\n\
+      \        self.max = 0\n        self.sample_delay_count = 0\n        self.correlation_values\
       \ = np.zeros(vectorsize, dtype=np.complex64)\n        self.sample_rate=sample_rate\n\
       \n    def work(self, input_items, output_items):\n        #build from ground\
       \ up\n        sequential_signal = input_items[0][0]\n        range_clock_signal\
-      \ = input_items[1][0]\n    \n        if self.i < self.vectorsize:\n        \
-      \    self.range_clock_signal[self.i] = range_clock_signal\n            self.sequential_signal[self.i]\
-      \ = sequential_signal\n            self.i += 1\n            output_items[0][:]\
-      \ = 0\n            return 1\n        \n        self.correlation_values = np.fft.ifft(np.fft.fft(self.range_clock_signal)\
-      \ * np.conj(np.fft.fft(self.sequential_signal)))\n         #self.max = np.amax(np.abs(self.correlation_values))\n\
-      \        self.sample_delay_count = np.argmax(np.abs(self.correlation_values))\n\
-      \        delay=(self.vectorsize - float(self.sample_delay_count)) \n       \
-      \ delay_in_micro_seconds= 10**6 * delay/self.sample_rate\n        output_items[0][:]\
-      \ = delay\n        self.i=0\n        print(self.i)\n       # output_items[0][:]\
-      \ = delay_in_micro_seconds\n        return output_items\n"
+      \ = input_items[1][0]\n       # self.j+=1\n       # print(self.j)\n    \n  \
+      \      if self.i < self.vectorsize:\n            self.range_clock_signal[self.i]\
+      \ = range_clock_signal\n            self.sequential_signal[self.i] = sequential_signal\n\
+      \            self.i += 1\n            output_items[0][0] = 0\n            #Gnu\
+      \ radio automatically takes output items as output, we just need to specify\
+      \ return length\n            return 1\n        \n        self.correlation_values\
+      \ = np.fft.ifft(np.fft.fft(self.range_clock_signal) * np.conj(np.fft.fft(self.sequential_signal)))\n\
+      \         #self.max = np.amax(np.abs(self.correlation_values))\n        self.sample_delay_count\
+      \ = np.argmax(np.abs(self.correlation_values))\n        delay=self.vectorsize\
+      \ - self.sample_delay_count\n       # delay_in_micro_seconds= 10**6 * delay/self.sample_rate\n\
+      \        output_items[0][0] = delay\n        print(self.i)\n        self.i=0\n\
+      \        \n        print(delay)\n       # output_items[0][:] = delay_in_micro_seconds\n\
+      \       #Gnu radio automatically takes output items as output, we just need\
+      \ to specify return length\n        return 1 \n"
     affinity: ''
     alias: ''
     comment: ''
@@ -639,7 +662,7 @@ blocks:
   states:
     _io_cache: ('CorrelationDelayEstimator', 'CorrelationDelayEstimator', [('vectorsize',
       '18750'), ('sample_rate', '50000')], [('0', 'complex', 1), ('1', 'complex',
-      1)], [('0', 'float', 1), ('1', 'float', 1)], '', ['sample_rate', 'vectorsize'])
+      1)], [('0', 'float', 1)], '', ['sample_rate', 'vectorsize'])
     bus_sink: false
     bus_source: false
     bus_structure: null
@@ -1113,104 +1136,7 @@ blocks:
     bus_structure: null
     coordinate: [1952, 1156.0]
     rotation: 0
-    state: true
-- name: qtgui_time_sink_x_3
-  id: qtgui_time_sink_x
-  parameters:
-    affinity: ''
-    alias: ''
-    alpha1: '1.0'
-    alpha10: '1.0'
-    alpha2: '1.0'
-    alpha3: '1.0'
-    alpha4: '1.0'
-    alpha5: '1.0'
-    alpha6: '1.0'
-    alpha7: '1.0'
-    alpha8: '1.0'
-    alpha9: '1.0'
-    autoscale: 'False'
-    axislabels: 'True'
-    color1: blue
-    color10: dark blue
-    color2: red
-    color3: green
-    color4: black
-    color5: cyan
-    color6: magenta
-    color7: yellow
-    color8: dark red
-    color9: dark green
-    comment: ''
-    ctrlpanel: 'False'
-    entags: 'True'
-    grid: 'False'
-    gui_hint: ''
-    label1: Signal 1
-    label10: Signal 10
-    label2: Signal 2
-    label3: Signal 3
-    label4: Signal 4
-    label5: Signal 5
-    label6: Signal 6
-    label7: Signal 7
-    label8: Signal 8
-    label9: Signal 9
-    legend: 'True'
-    marker1: '-1'
-    marker10: '-1'
-    marker2: '-1'
-    marker3: '-1'
-    marker4: '-1'
-    marker5: '-1'
-    marker6: '-1'
-    marker7: '-1'
-    marker8: '-1'
-    marker9: '-1'
-    name: '""'
-    nconnections: '1'
-    size: '1024'
-    srate: samp_rate
-    stemplot: 'False'
-    style1: '1'
-    style10: '1'
-    style2: '1'
-    style3: '1'
-    style4: '1'
-    style5: '1'
-    style6: '1'
-    style7: '1'
-    style8: '1'
-    style9: '1'
-    tr_chan: '0'
-    tr_delay: '0'
-    tr_level: '0.0'
-    tr_mode: qtgui.TRIG_MODE_FREE
-    tr_slope: qtgui.TRIG_SLOPE_POS
-    tr_tag: '""'
-    type: float
-    update_time: '0.10'
-    width1: '1'
-    width10: '1'
-    width2: '1'
-    width3: '1'
-    width4: '1'
-    width5: '1'
-    width6: '1'
-    width7: '1'
-    width8: '1'
-    width9: '1'
-    ylabel: Amplitude
-    ymax: '1'
-    ymin: '-1'
-    yunit: '""'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1792, 1548.0]
-    rotation: 0
-    state: true
+    state: enabled
 
 connections:
 - [analog_agc_xx_0, '0', blocks_complex_to_float_1, '0']
@@ -1228,9 +1154,11 @@ connections:
 - [blocks_complex_to_float_0, '1', blocks_null_sink_1, '0']
 - [blocks_complex_to_float_1, '0', qtgui_time_sink_x_2, '0']
 - [blocks_complex_to_float_1, '1', blocks_null_sink_2_0, '0']
+- [blocks_delay_0, '0', blocks_delay_1, '0']
 - [blocks_delay_0, '0', blocks_stream_mux_0_0, '1']
 - [blocks_delay_0, '0', blocks_stream_to_vector_1, '0']
 - [blocks_delay_0, '0', channels_channel_model_0, '0']
+- [blocks_delay_1, '0', blocks_add_xx_0, '0']
 - [blocks_stream_mux_0, '0', blocks_complex_to_float_0, '0']
 - [blocks_stream_mux_0, '0', blocks_delay_0, '0']
 - [blocks_stream_mux_0, '0', blocks_stream_mux_0_0, '0']
@@ -1248,7 +1176,6 @@ connections:
 - [epy_block_0, '0', blocks_vector_to_stream_0, '0']
 - [epy_block_1, '0', qtgui_histogram_sink_x_0, '0']
 - [epy_block_1, '0', qtgui_number_sink_0, '0']
-- [epy_block_1, '1', qtgui_time_sink_x_3, '0']
 
 metadata:
   file_format: 1
