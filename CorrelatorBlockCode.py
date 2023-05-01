@@ -41,7 +41,9 @@ class CorrelationDelayEstimator(gr.sync_block):
         delay=self.vectorsize - self.sample_delay_count
        # delay_in_micro_seconds= 10**6 * delay/self.sample_rate
         output_items[0][0] = delay
+        print(self.i)
         self.i=0
+        
         print(delay)
        # output_items[0][:] = delay_in_micro_seconds
        #Gnu radio automatically takes output items as output, we just need to specify return length
