@@ -22,8 +22,11 @@ class CorrelationDelayEstimator(gr.sync_block):
 
     def work(self, input_items, output_items):
         #build from ground up
-        sequential_signal = input_items[0][0]
-        range_clock_signal = input_items[1][0]
+        sequential_signal = input_items[0][:]
+        range_clock_signal = input_items[1][:]
+        print(sequential_signal.size)
+        print("yay")
+        print(range_clock_signal.size)
        # self.j+=1
        # print(self.j)
     

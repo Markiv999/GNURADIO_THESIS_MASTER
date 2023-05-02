@@ -27,6 +27,7 @@ from gnuradio.filter import firdes
 import sip
 from gnuradio import analog
 from gnuradio import blocks
+from gnuradio import channels
 from gnuradio import gr
 from gnuradio.fft import window
 import sys
@@ -78,7 +79,7 @@ class test2(gr.top_block, Qt.QWidget):
         ##################################################
         self.variable_qtgui_chooser_0 = variable_qtgui_chooser_0 = 0
         self.variable_0 = variable_0 = (10000,5000,2500,1250)
-        self.samp_rate = samp_rate = 500000
+        self.samp_rate = samp_rate = 1000000
         self.frequency = frequency = 10000
 
         ##################################################
@@ -113,7 +114,7 @@ class test2(gr.top_block, Qt.QWidget):
 
         self.qtgui_time_sink_x_2.set_y_label('Amplitude', "")
 
-        self.qtgui_time_sink_x_2.enable_tags(True)
+        self.qtgui_time_sink_x_2.enable_tags(False)
         self.qtgui_time_sink_x_2.set_trigger_mode(qtgui.TRIG_MODE_FREE, qtgui.TRIG_SLOPE_POS, 0.0, 0, 0, "")
         self.qtgui_time_sink_x_2.enable_autoscale(False)
         self.qtgui_time_sink_x_2.enable_grid(False)
@@ -200,125 +201,48 @@ class test2(gr.top_block, Qt.QWidget):
 
         self._qtgui_time_sink_x_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0.qwidget(), Qt.QWidget)
         self.top_layout.addWidget(self._qtgui_time_sink_x_0_win)
-        self.qtgui_number_sink_0 = qtgui.number_sink(
-            gr.sizeof_float,
-            0,
-            qtgui.NUM_GRAPH_HORIZ,
-            1,
-            None # parent
-        )
-        self.qtgui_number_sink_0.set_update_time(0.1)
-        self.qtgui_number_sink_0.set_title("")
-
-        labels = ['', '', '', '', '',
-            '', '', '', '', '']
-        units = ['', '', '', '', '',
-            '', '', '', '', '']
-        colors = [("black", "black"), ("black", "black"), ("black", "black"), ("black", "black"), ("black", "black"),
-            ("black", "black"), ("black", "black"), ("black", "black"), ("black", "black"), ("black", "black")]
-        factor = [1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1]
-
-        for i in range(1):
-            self.qtgui_number_sink_0.set_min(i, -1)
-            self.qtgui_number_sink_0.set_max(i, 1)
-            self.qtgui_number_sink_0.set_color(i, colors[i][0], colors[i][1])
-            if len(labels[i]) == 0:
-                self.qtgui_number_sink_0.set_label(i, "Data {0}".format(i))
-            else:
-                self.qtgui_number_sink_0.set_label(i, labels[i])
-            self.qtgui_number_sink_0.set_unit(i, units[i])
-            self.qtgui_number_sink_0.set_factor(i, factor[i])
-
-        self.qtgui_number_sink_0.enable_autoscale(True)
-        self._qtgui_number_sink_0_win = sip.wrapinstance(self.qtgui_number_sink_0.qwidget(), Qt.QWidget)
-        self.top_layout.addWidget(self._qtgui_number_sink_0_win)
-        self.qtgui_histogram_sink_x_0 = qtgui.histogram_sink_f(
-            1024,
-            100,
-            0,
-            20000,
-            "",
-            1,
-            None # parent
-        )
-
-        self.qtgui_histogram_sink_x_0.set_update_time(0.10)
-        self.qtgui_histogram_sink_x_0.enable_autoscale(True)
-        self.qtgui_histogram_sink_x_0.enable_accumulate(False)
-        self.qtgui_histogram_sink_x_0.enable_grid(False)
-        self.qtgui_histogram_sink_x_0.enable_axis_labels(True)
-
-
-        labels = ['', '', '', '', '',
-            '', '', '', '', '']
-        widths = [1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1]
-        colors = ["blue", "red", "green", "black", "cyan",
-            "magenta", "yellow", "dark red", "dark green", "dark blue"]
-        styles = [1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1]
-        markers= [-1, -1, -1, -1, -1,
-            -1, -1, -1, -1, -1]
-        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
-            1.0, 1.0, 1.0, 1.0, 1.0]
-
-        for i in range(1):
-            if len(labels[i]) == 0:
-                self.qtgui_histogram_sink_x_0.set_line_label(i, "Data {0}".format(i))
-            else:
-                self.qtgui_histogram_sink_x_0.set_line_label(i, labels[i])
-            self.qtgui_histogram_sink_x_0.set_line_width(i, widths[i])
-            self.qtgui_histogram_sink_x_0.set_line_color(i, colors[i])
-            self.qtgui_histogram_sink_x_0.set_line_style(i, styles[i])
-            self.qtgui_histogram_sink_x_0.set_line_marker(i, markers[i])
-            self.qtgui_histogram_sink_x_0.set_line_alpha(i, alphas[i])
-
-        self._qtgui_histogram_sink_x_0_win = sip.wrapinstance(self.qtgui_histogram_sink_x_0.qwidget(), Qt.QWidget)
-        self.top_layout.addWidget(self._qtgui_histogram_sink_x_0_win)
-        self.epy_block_1 = epy_block_1.CorrelationDelayEstimator(vectorsize=18750, sample_rate=50000)
+        self.epy_block_1 = epy_block_1.CorrelationDelayEstimator(vectorsize=187500, sample_rate=samp_rate)
+        self.channels_channel_model_0 = channels.channel_model(
+            noise_voltage=1,
+            frequency_offset=0.0,
+            epsilon=1.0,
+            taps=[1.0 + 1.0j],
+            noise_seed=0,
+            block_tags=False)
         self.blocks_throttle_0 = blocks.throttle(gr.sizeof_gr_complex*1, samp_rate,True)
         self.blocks_stream_mux_0 = blocks.stream_mux(gr.sizeof_gr_complex*1, variable_0)
         self.blocks_null_sink_2_0 = blocks.null_sink(gr.sizeof_float*1)
+        self.blocks_null_sink_2 = blocks.null_sink(gr.sizeof_float*1)
         self.blocks_null_sink_1 = blocks.null_sink(gr.sizeof_float*1)
-        self.blocks_delay_1 = blocks.delay(gr.sizeof_gr_complex*1, 0)
-        self.blocks_delay_0 = blocks.delay(gr.sizeof_gr_complex*1, 2000)
+        self.blocks_delay_0 = blocks.delay(gr.sizeof_gr_complex*1, 15000)
         self.blocks_complex_to_float_1 = blocks.complex_to_float(1)
         self.blocks_complex_to_float_0 = blocks.complex_to_float(1)
-        self.blocks_add_xx_0 = blocks.add_vcc(1)
         self.analog_sig_source_x_0_0_0_1 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, (frequency/8), 0.8, 0, 0)
         self.analog_sig_source_x_0_0_0_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, (frequency/4), 0.8, 0, 0)
         self.analog_sig_source_x_0_0_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, 5000, 0.8, 0, 0)
         self.analog_sig_source_x_0_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, 10000, 0.8, 0, 0)
-        self.analog_noise_source_x_0 = analog.noise_source_c(analog.GR_GAUSSIAN, 20, 0)
-        self.analog_agc_xx_0 = analog.agc_cc((1e-4), 1.0, 1)
-        self.analog_agc_xx_0.set_max_gain(65536)
 
 
         ##################################################
         # Connections
         ##################################################
-        self.connect((self.analog_agc_xx_0, 0), (self.blocks_complex_to_float_1, 0))
-        self.connect((self.analog_agc_xx_0, 0), (self.epy_block_1, 0))
-        self.connect((self.analog_noise_source_x_0, 0), (self.blocks_add_xx_0, 1))
         self.connect((self.analog_sig_source_x_0_0, 0), (self.blocks_throttle_0, 0))
         self.connect((self.analog_sig_source_x_0_0_0, 0), (self.blocks_stream_mux_0, 1))
         self.connect((self.analog_sig_source_x_0_0_0_0, 0), (self.blocks_stream_mux_0, 2))
         self.connect((self.analog_sig_source_x_0_0_0_1, 0), (self.blocks_stream_mux_0, 3))
-        self.connect((self.blocks_add_xx_0, 0), (self.analog_agc_xx_0, 0))
         self.connect((self.blocks_complex_to_float_0, 1), (self.blocks_null_sink_1, 0))
         self.connect((self.blocks_complex_to_float_0, 0), (self.qtgui_time_sink_x_2, 1))
         self.connect((self.blocks_complex_to_float_1, 1), (self.blocks_null_sink_2_0, 0))
         self.connect((self.blocks_complex_to_float_1, 0), (self.qtgui_time_sink_x_2, 0))
-        self.connect((self.blocks_delay_0, 0), (self.blocks_delay_1, 0))
-        self.connect((self.blocks_delay_1, 0), (self.blocks_add_xx_0, 0))
+        self.connect((self.blocks_delay_0, 0), (self.channels_channel_model_0, 0))
         self.connect((self.blocks_stream_mux_0, 0), (self.blocks_complex_to_float_0, 0))
         self.connect((self.blocks_stream_mux_0, 0), (self.blocks_delay_0, 0))
         self.connect((self.blocks_stream_mux_0, 0), (self.epy_block_1, 1))
         self.connect((self.blocks_stream_mux_0, 0), (self.qtgui_time_sink_x_0, 0))
         self.connect((self.blocks_throttle_0, 0), (self.blocks_stream_mux_0, 0))
-        self.connect((self.epy_block_1, 0), (self.qtgui_histogram_sink_x_0, 0))
-        self.connect((self.epy_block_1, 0), (self.qtgui_number_sink_0, 0))
+        self.connect((self.channels_channel_model_0, 0), (self.blocks_complex_to_float_1, 0))
+        self.connect((self.channels_channel_model_0, 0), (self.epy_block_1, 0))
+        self.connect((self.epy_block_1, 0), (self.blocks_null_sink_2, 0))
 
 
     def closeEvent(self, event):
@@ -352,6 +276,7 @@ class test2(gr.top_block, Qt.QWidget):
         self.analog_sig_source_x_0_0_0_0.set_sampling_freq(self.samp_rate)
         self.analog_sig_source_x_0_0_0_1.set_sampling_freq(self.samp_rate)
         self.blocks_throttle_0.set_sample_rate(self.samp_rate)
+        self.epy_block_1.sample_rate = self.samp_rate
         self.qtgui_time_sink_x_0.set_samp_rate(self.samp_rate)
         self.qtgui_time_sink_x_2.set_samp_rate(self.samp_rate)
 

@@ -49,7 +49,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '500000'
+    value: '1000000'
   states:
     bus_sink: false
     bus_source: false
@@ -118,13 +118,13 @@ blocks:
     bus_structure: null
     coordinate: [1328, 1348.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: analog_noise_source_x_0
   id: analog_noise_source_x
   parameters:
     affinity: ''
     alias: ''
-    amp: '20'
+    amp: '0.001'
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -137,7 +137,7 @@ blocks:
     bus_structure: null
     coordinate: [896, 1508.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: analog_sig_source_x_0
   id: analog_sig_source_x
   parameters:
@@ -265,7 +265,7 @@ blocks:
     bus_structure: null
     coordinate: [1160, 1480.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: blocks_and_xx_0
   id: blocks_and_xx
   parameters:
@@ -321,7 +321,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    delay: '2000'
+    delay: '15000'
     maxoutbuf: '0'
     minoutbuf: '0'
     num_ports: '1'
@@ -350,9 +350,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [792, 1344.0]
+    coordinate: [784, 1344.0]
     rotation: 0
-    state: true
+    state: disabled
 - name: blocks_null_sink_0
   id: blocks_null_sink
   parameters:
@@ -403,7 +403,7 @@ blocks:
     bus_structure: null
     coordinate: [1976, 1256.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: blocks_null_sink_2_0
   id: blocks_null_sink
   parameters:
@@ -579,16 +579,16 @@ blocks:
     freq_offset: '0.0'
     maxoutbuf: '0'
     minoutbuf: '0'
-    noise_voltage: '0'
+    noise_voltage: '1'
     seed: '0'
     taps: 1.0 + 1.0j
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1024, 1264.0]
+    coordinate: [1016, 1264.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: epy_block_0
   id: epy_block
   parameters:
@@ -637,9 +637,10 @@ blocks:
       \        self.max = 0\n        self.sample_delay_count = 0\n        self.correlation_values\
       \ = np.zeros(vectorsize, dtype=np.complex64)\n        self.sample_rate=sample_rate\n\
       \n    def work(self, input_items, output_items):\n        #build from ground\
-      \ up\n        sequential_signal = input_items[0][0]\n        range_clock_signal\
-      \ = input_items[1][0]\n       # self.j+=1\n       # print(self.j)\n    \n  \
-      \      if self.i < self.vectorsize:\n            self.range_clock_signal[self.i]\
+      \ up\n        sequential_signal = input_items[0][:]\n        range_clock_signal\
+      \ = input_items[1][:]\n        print(sequential_signal.size)\n        print(\"\
+      yay\")\n        print(range_clock_signal.size)\n       # self.j+=1\n       #\
+      \ print(self.j)\n    \n        if self.i < self.vectorsize:\n            self.range_clock_signal[self.i]\
       \ = range_clock_signal\n            self.sequential_signal[self.i] = sequential_signal\n\
       \            self.i += 1\n            output_items[0][0] = 0\n            #Gnu\
       \ radio automatically takes output items as output, we just need to specify\
@@ -657,8 +658,8 @@ blocks:
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
-    sample_rate: '50000'
-    vectorsize: '18750'
+    sample_rate: samp_rate
+    vectorsize: '187500'
   states:
     _io_cache: ('CorrelationDelayEstimator', 'CorrelationDelayEstimator', [('vectorsize',
       '18750'), ('sample_rate', '50000')], [('0', 'complex', 1), ('1', 'complex',
@@ -782,7 +783,7 @@ blocks:
     bus_structure: null
     coordinate: [1960, 864.0]
     rotation: 0
-    state: true
+    state: disabled
 - name: qtgui_number_sink_0
   id: qtgui_number_sink
   parameters:
@@ -845,7 +846,7 @@ blocks:
     bus_structure: null
     coordinate: [1264, 1180.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: qtgui_time_sink_x_0
   id: qtgui_time_sink_x
   parameters:
@@ -1069,7 +1070,7 @@ blocks:
     color9: dark green
     comment: ''
     ctrlpanel: 'False'
-    entags: 'True'
+    entags: 'False'
     grid: 'False'
     gui_hint: ''
     label1: Signal 1
@@ -1134,7 +1135,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1952, 1156.0]
+    coordinate: [1992, 1108.0]
     rotation: 0
     state: enabled
 
@@ -1150,6 +1151,8 @@ connections:
 - [analog_sig_source_x_0_0_0_0, '0', blocks_stream_mux_0, '2']
 - [analog_sig_source_x_0_0_0_1, '0', blocks_stream_mux_0, '3']
 - [blocks_add_xx_0, '0', analog_agc_xx_0, '0']
+- [blocks_add_xx_0, '0', blocks_complex_to_float_1, '0']
+- [blocks_add_xx_0, '0', epy_block_1, '0']
 - [blocks_complex_to_float_0, '0', qtgui_time_sink_x_2, '1']
 - [blocks_complex_to_float_0, '1', blocks_null_sink_1, '0']
 - [blocks_complex_to_float_1, '0', qtgui_time_sink_x_2, '0']
@@ -1173,7 +1176,10 @@ connections:
 - [blocks_throttle_0, '0', blocks_stream_to_vector_0, '0']
 - [blocks_vector_to_stream_0, '0', qtgui_time_sink_x_0, '0']
 - [channels_channel_model_0, '0', analog_agc_xx_0, '0']
+- [channels_channel_model_0, '0', blocks_complex_to_float_1, '0']
+- [channels_channel_model_0, '0', epy_block_1, '0']
 - [epy_block_0, '0', blocks_vector_to_stream_0, '0']
+- [epy_block_1, '0', blocks_null_sink_2, '0']
 - [epy_block_1, '0', qtgui_histogram_sink_x_0, '0']
 - [epy_block_1, '0', qtgui_number_sink_0, '0']
 
