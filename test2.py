@@ -34,6 +34,8 @@ import signal
 from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
 from gnuradio import eng_notation
+from gnuradio.qtgui import Range, RangeWidget
+from PyQt5 import QtCore
 import test2_epy_block_1 as epy_block_1  # embedded python block
 
 
@@ -76,6 +78,7 @@ class test2(gr.top_block, Qt.QWidget):
         ##################################################
         # Variables
         ##################################################
+        self.variable_qtgui_range_0 = variable_qtgui_range_0 = 0
         self.variable_qtgui_chooser_0 = variable_qtgui_chooser_0 = 0
         self.variable_0 = variable_0 = (10000,5000,2500,1250)
         self.samp_rate = samp_rate = 500000
@@ -85,6 +88,9 @@ class test2(gr.top_block, Qt.QWidget):
         # Blocks
         ##################################################
 
+        self._variable_qtgui_range_0_range = Range(0, 100, 0.05, 0, 200)
+        self._variable_qtgui_range_0_win = RangeWidget(self._variable_qtgui_range_0_range, self.set_variable_qtgui_range_0, "'variable_qtgui_range_0'", "counter_slider", float, QtCore.Qt.Horizontal)
+        self.top_layout.addWidget(self._variable_qtgui_range_0_win)
         # Create the options list
         self._variable_qtgui_chooser_0_options = [0, 1000, 2]
         # Create the labels list
@@ -214,7 +220,7 @@ class test2(gr.top_block, Qt.QWidget):
         self.analog_sig_source_x_0_0_0_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, (frequency/4), 1, 0, 0)
         self.analog_sig_source_x_0_0_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, 5000, 1, 0, 0)
         self.analog_sig_source_x_0_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, 10000, 1, 0, 0)
-        self.analog_noise_source_x_0 = analog.noise_source_c(analog.GR_GAUSSIAN, 1, 0)
+        self.analog_noise_source_x_0 = analog.noise_source_c(analog.GR_GAUSSIAN, variable_qtgui_range_0, 0)
         self.analog_agc_xx_0 = analog.agc_cc((1e-4), 1.0, 1)
         self.analog_agc_xx_0.set_max_gain(65536)
 
@@ -250,6 +256,13 @@ class test2(gr.top_block, Qt.QWidget):
         self.wait()
 
         event.accept()
+
+    def get_variable_qtgui_range_0(self):
+        return self.variable_qtgui_range_0
+
+    def set_variable_qtgui_range_0(self, variable_qtgui_range_0):
+        self.variable_qtgui_range_0 = variable_qtgui_range_0
+        self.analog_noise_source_x_0.set_amplitude(self.variable_qtgui_range_0)
 
     def get_variable_qtgui_chooser_0(self):
         return self.variable_qtgui_chooser_0
