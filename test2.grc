@@ -116,15 +116,15 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1328, 1348.0]
+    coordinate: [1440, 1432.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: analog_noise_source_x_0
   id: analog_noise_source_x
   parameters:
     affinity: ''
     alias: ''
-    amp: '0.001'
+    amp: '1'
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -135,9 +135,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [896, 1508.0]
+    coordinate: [1056, 1480.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: analog_sig_source_x_0
   id: analog_sig_source_x
   parameters:
@@ -263,9 +263,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1160, 1480.0]
+    coordinate: [1312, 1488.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: blocks_and_xx_0
   id: blocks_and_xx
   parameters:
@@ -296,7 +296,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1552, 1136.0]
+    coordinate: [1560, 1120.0]
     rotation: 0
     state: enabled
 - name: blocks_complex_to_float_1
@@ -312,7 +312,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1528, 1256.0]
+    coordinate: [1624, 1296.0]
     rotation: 0
     state: enabled
 - name: blocks_delay_0
@@ -321,7 +321,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    delay: '18000'
+    delay: '5000'
     maxoutbuf: '0'
     minoutbuf: '0'
     num_ports: '1'
@@ -331,7 +331,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1080, 1032.0]
+    coordinate: [824, 1104.0]
     rotation: 0
     state: enabled
 - name: blocks_delay_1
@@ -437,7 +437,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [896, 856.0]
+    coordinate: [848, 784.0]
     rotation: 0
     state: true
 - name: blocks_stream_mux_0_0
@@ -628,7 +628,7 @@ blocks:
   id: epy_block
   parameters:
     _source_code: "import numpy as np\nfrom gnuradio import gr\n\nclass CorrelationDelayEstimator(gr.sync_block):\n\
-      \    def __init__(self, vectorsize=18750, sample_rate=50000):\n        gr.sync_block.__init__(\n\
+      \    def __init__(self, vectorsize=18750, sample_rate=500000):\n        gr.sync_block.__init__(\n\
       \            self,\n            name='CorrelationDelayEstimator',\n        \
       \    in_sig=[np.complex64, np.complex64],\n            out_sig=[np.float32]\n\
       \        )\n        self.vectorsize = vectorsize\n        self.range_clock_signal\
@@ -659,7 +659,7 @@ blocks:
     vectorsize: '18750'
   states:
     _io_cache: ('CorrelationDelayEstimator', 'CorrelationDelayEstimator', [('vectorsize',
-      '18750'), ('sample_rate', '50000')], [('0', 'complex', 1), ('1', 'complex',
+      '18750'), ('sample_rate', '500000')], [('0', 'complex', 1), ('1', 'complex',
       1)], [('0', 'float', 1)], '', ['sample_rate', 'vectorsize'])
     bus_sink: false
     bus_source: false
@@ -841,7 +841,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1264, 1180.0]
+    coordinate: [1240, 1224.0]
     rotation: 0
     state: disabled
 - name: qtgui_time_sink_x_0
@@ -1132,7 +1132,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1992, 1108.0]
+    coordinate: [1984, 1120.0]
     rotation: 0
     state: enabled
 
@@ -1148,18 +1148,15 @@ connections:
 - [analog_sig_source_x_0_0_0_0, '0', blocks_stream_mux_0, '2']
 - [analog_sig_source_x_0_0_0_1, '0', blocks_stream_mux_0, '3']
 - [blocks_add_xx_0, '0', analog_agc_xx_0, '0']
-- [blocks_add_xx_0, '0', blocks_complex_to_float_1, '0']
-- [blocks_add_xx_0, '0', epy_block_1, '0']
 - [blocks_complex_to_float_0, '0', qtgui_time_sink_x_2, '1']
 - [blocks_complex_to_float_0, '1', blocks_null_sink_1, '0']
 - [blocks_complex_to_float_1, '0', qtgui_time_sink_x_2, '0']
 - [blocks_complex_to_float_1, '1', blocks_null_sink_2_0, '0']
-- [blocks_delay_0, '0', blocks_complex_to_float_1, '0']
+- [blocks_delay_0, '0', blocks_add_xx_0, '0']
 - [blocks_delay_0, '0', blocks_delay_1, '0']
 - [blocks_delay_0, '0', blocks_stream_mux_0_0, '1']
 - [blocks_delay_0, '0', blocks_stream_to_vector_1, '0']
 - [blocks_delay_0, '0', channels_channel_model_0, '0']
-- [blocks_delay_0, '0', epy_block_1, '0']
 - [blocks_delay_1, '0', blocks_add_xx_0, '0']
 - [blocks_stream_mux_0, '0', blocks_complex_to_float_0, '0']
 - [blocks_stream_mux_0, '0', blocks_delay_0, '0']

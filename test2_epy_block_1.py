@@ -2,7 +2,7 @@ import numpy as np
 from gnuradio import gr
 
 class CorrelationDelayEstimator(gr.sync_block):
-    def __init__(self, vectorsize=18750, sample_rate=50000):
+    def __init__(self, vectorsize=18750, sample_rate=500000):
         gr.sync_block.__init__(
             self,
             name='CorrelationDelayEstimator',
