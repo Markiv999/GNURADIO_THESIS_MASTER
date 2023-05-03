@@ -27,7 +27,6 @@ from gnuradio.filter import firdes
 import sip
 from gnuradio import analog
 from gnuradio import blocks
-from gnuradio import channels
 from gnuradio import gr
 from gnuradio.fft import window
 import sys
@@ -79,7 +78,7 @@ class test2(gr.top_block, Qt.QWidget):
         ##################################################
         self.variable_qtgui_chooser_0 = variable_qtgui_chooser_0 = 0
         self.variable_0 = variable_0 = (10000,5000,2500,1250)
-        self.samp_rate = samp_rate = 1000000
+        self.samp_rate = samp_rate = 500000
         self.frequency = frequency = 10000
 
         ##################################################
@@ -201,26 +200,19 @@ class test2(gr.top_block, Qt.QWidget):
 
         self._qtgui_time_sink_x_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0.qwidget(), Qt.QWidget)
         self.top_layout.addWidget(self._qtgui_time_sink_x_0_win)
-        self.epy_block_1 = epy_block_1.CorrelationDelayEstimator(vectorsize=187500, sample_rate=samp_rate)
-        self.channels_channel_model_0 = channels.channel_model(
-            noise_voltage=1,
-            frequency_offset=0.0,
-            epsilon=1.0,
-            taps=[1.0 + 1.0j],
-            noise_seed=0,
-            block_tags=False)
+        self.epy_block_1 = epy_block_1.CorrelationDelayEstimator(vectorsize=18750, sample_rate=samp_rate)
         self.blocks_throttle_0 = blocks.throttle(gr.sizeof_gr_complex*1, samp_rate,True)
         self.blocks_stream_mux_0 = blocks.stream_mux(gr.sizeof_gr_complex*1, variable_0)
         self.blocks_null_sink_2_0 = blocks.null_sink(gr.sizeof_float*1)
         self.blocks_null_sink_2 = blocks.null_sink(gr.sizeof_float*1)
         self.blocks_null_sink_1 = blocks.null_sink(gr.sizeof_float*1)
-        self.blocks_delay_0 = blocks.delay(gr.sizeof_gr_complex*1, 15000)
+        self.blocks_delay_0 = blocks.delay(gr.sizeof_gr_complex*1, 2500)
         self.blocks_complex_to_float_1 = blocks.complex_to_float(1)
         self.blocks_complex_to_float_0 = blocks.complex_to_float(1)
-        self.analog_sig_source_x_0_0_0_1 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, (frequency/8), 0.8, 0, 0)
-        self.analog_sig_source_x_0_0_0_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, (frequency/4), 0.8, 0, 0)
-        self.analog_sig_source_x_0_0_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, 5000, 0.8, 0, 0)
-        self.analog_sig_source_x_0_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, 10000, 0.8, 0, 0)
+        self.analog_sig_source_x_0_0_0_1 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, (frequency/8), 1, 0, 0)
+        self.analog_sig_source_x_0_0_0_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, (frequency/4), 1, 0, 0)
+        self.analog_sig_source_x_0_0_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, 5000, 1, 0, 0)
+        self.analog_sig_source_x_0_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, 10000, 1, 0, 0)
 
 
         ##################################################
@@ -234,14 +226,13 @@ class test2(gr.top_block, Qt.QWidget):
         self.connect((self.blocks_complex_to_float_0, 0), (self.qtgui_time_sink_x_2, 1))
         self.connect((self.blocks_complex_to_float_1, 1), (self.blocks_null_sink_2_0, 0))
         self.connect((self.blocks_complex_to_float_1, 0), (self.qtgui_time_sink_x_2, 0))
-        self.connect((self.blocks_delay_0, 0), (self.channels_channel_model_0, 0))
+        self.connect((self.blocks_delay_0, 0), (self.blocks_complex_to_float_1, 0))
+        self.connect((self.blocks_delay_0, 0), (self.epy_block_1, 0))
         self.connect((self.blocks_stream_mux_0, 0), (self.blocks_complex_to_float_0, 0))
         self.connect((self.blocks_stream_mux_0, 0), (self.blocks_delay_0, 0))
         self.connect((self.blocks_stream_mux_0, 0), (self.epy_block_1, 1))
         self.connect((self.blocks_stream_mux_0, 0), (self.qtgui_time_sink_x_0, 0))
         self.connect((self.blocks_throttle_0, 0), (self.blocks_stream_mux_0, 0))
-        self.connect((self.channels_channel_model_0, 0), (self.blocks_complex_to_float_1, 0))
-        self.connect((self.channels_channel_model_0, 0), (self.epy_block_1, 0))
         self.connect((self.epy_block_1, 0), (self.blocks_null_sink_2, 0))
 
 

@@ -14,7 +14,7 @@ class CorrelationDelayEstimator(gr.sync_block):
         self.range_clock_signal = np.zeros(vectorsize, dtype=np.complex64)
         self.sequential_signal = np.zeros(vectorsize, dtype=np.complex64)
         self.i = 0
-       # self.j=0
+        self.j=0
         self.max = 0
         self.sample_delay_count = 0
         self.correlation_values = np.zeros(vectorsize, dtype=np.complex64)
@@ -24,30 +24,37 @@ class CorrelationDelayEstimator(gr.sync_block):
         #build from ground up
         sequential_signal = input_items[0][:]
         range_clock_signal = input_items[1][:]
-        print(sequential_signal.size)
-        print("yay")
-        print(range_clock_signal.size)
+        #print(sequential_signal.size)
+        #print("yay")
+        #print(range_clock_signal.size)
        # self.j+=1
        # print(self.j)
-    
-        if self.i < self.vectorsize:
-            self.range_clock_signal[self.i] = range_clock_signal
-            self.sequential_signal[self.i] = sequential_signal
-            self.i += 1
-            output_items[0][0] = 0
+        while self.j<sequential_signal.size:
+            if self.i < self.vectorsize:
+                self.range_clock_signal[self.i] = range_clock_signal[self.j]
+                self.sequential_signal[self.i] = sequential_signal[self.j]
+                self.i += 1
+                output_items[0][0] = 0
+                self.j+=1
+                continue
             #Gnu radio automatically takes output items as output, we just need to specify return length
-            return 1
+            #Block to calculate Delay 
+            self.correlation_values = np.fft.ifft(np.fft.fft(self.range_clock_signal) * np.conj(np.fft.fft(self.sequential_signal)))
+            
+            self.sample_delay_count = np.argmax(np.abs(self.correlation_values))
+            #print(np.amax(self.correlation_values))
+            delay=self.vectorsize - self.sample_delay_count
+            #Delay_in_micro_seconds= 10**6 * delay/self.sample_rate
+            output_items[0][0] = delay
+            
+
+            #Print Statements to diagnose
+            #print(self.i)
+            print(delay)
+            #Reset variables
+            self.i=0
         
-        self.correlation_values = np.fft.ifft(np.fft.fft(self.range_clock_signal) * np.conj(np.fft.fft(self.sequential_signal)))
-         #self.max = np.amax(np.abs(self.correlation_values))
-        self.sample_delay_count = np.argmax(np.abs(self.correlation_values))
-        delay=self.vectorsize - self.sample_delay_count
-       # delay_in_micro_seconds= 10**6 * delay/self.sample_rate
-        output_items[0][0] = delay
-        print(self.i)
-        self.i=0
-        
-        print(delay)
+        self.j=0
        # output_items[0][:] = delay_in_micro_seconds
        #Gnu radio automatically takes output items as output, we just need to specify return length
-        return 1 
+        return 1

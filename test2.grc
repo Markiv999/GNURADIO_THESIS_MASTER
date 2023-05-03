@@ -49,7 +49,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '1000000'
+    value: '500000'
   states:
     bus_sink: false
     bus_source: false
@@ -165,7 +165,7 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    amp: '0.8'
+    amp: '1'
     comment: ''
     freq: '10000'
     maxoutbuf: '0'
@@ -187,7 +187,7 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    amp: '0.8'
+    amp: '1'
     comment: ''
     freq: '5000'
     maxoutbuf: '0'
@@ -209,7 +209,7 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    amp: '0.8'
+    amp: '1'
     comment: ''
     freq: frequency/4
     maxoutbuf: '0'
@@ -231,7 +231,7 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    amp: '0.8'
+    amp: '1'
     comment: ''
     freq: frequency/8
     maxoutbuf: '0'
@@ -312,7 +312,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1608, 1344.0]
+    coordinate: [1528, 1256.0]
     rotation: 0
     state: enabled
 - name: blocks_delay_0
@@ -321,7 +321,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    delay: '15000'
+    delay: '2500'
     maxoutbuf: '0'
     minoutbuf: '0'
     num_ports: '1'
@@ -588,7 +588,7 @@ blocks:
     bus_structure: null
     coordinate: [1016, 1264.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: epy_block_0
   id: epy_block
   parameters:
@@ -633,33 +633,38 @@ blocks:
       \            in_sig=[np.complex64, np.complex64],\n            out_sig=[np.float32]\n\
       \        )\n        self.vectorsize = vectorsize\n        self.range_clock_signal\
       \ = np.zeros(vectorsize, dtype=np.complex64)\n        self.sequential_signal\
-      \ = np.zeros(vectorsize, dtype=np.complex64)\n        self.i = 0\n       # self.j=0\n\
+      \ = np.zeros(vectorsize, dtype=np.complex64)\n        self.i = 0\n        self.j=0\n\
       \        self.max = 0\n        self.sample_delay_count = 0\n        self.correlation_values\
       \ = np.zeros(vectorsize, dtype=np.complex64)\n        self.sample_rate=sample_rate\n\
       \n    def work(self, input_items, output_items):\n        #build from ground\
       \ up\n        sequential_signal = input_items[0][:]\n        range_clock_signal\
-      \ = input_items[1][:]\n        print(sequential_signal.size)\n        print(\"\
-      yay\")\n        print(range_clock_signal.size)\n       # self.j+=1\n       #\
-      \ print(self.j)\n    \n        if self.i < self.vectorsize:\n            self.range_clock_signal[self.i]\
-      \ = range_clock_signal\n            self.sequential_signal[self.i] = sequential_signal\n\
-      \            self.i += 1\n            output_items[0][0] = 0\n            #Gnu\
-      \ radio automatically takes output items as output, we just need to specify\
-      \ return length\n            return 1\n        \n        self.correlation_values\
-      \ = np.fft.ifft(np.fft.fft(self.range_clock_signal) * np.conj(np.fft.fft(self.sequential_signal)))\n\
-      \         #self.max = np.amax(np.abs(self.correlation_values))\n        self.sample_delay_count\
-      \ = np.argmax(np.abs(self.correlation_values))\n        delay=self.vectorsize\
-      \ - self.sample_delay_count\n       # delay_in_micro_seconds= 10**6 * delay/self.sample_rate\n\
-      \        output_items[0][0] = delay\n        print(self.i)\n        self.i=0\n\
-      \        \n        print(delay)\n       # output_items[0][:] = delay_in_micro_seconds\n\
-      \       #Gnu radio automatically takes output items as output, we just need\
-      \ to specify return length\n        return 1 \n"
+      \ = input_items[1][:]\n        #print(sequential_signal.size)\n        #print(\"\
+      yay\")\n        #print(range_clock_signal.size)\n       # self.j+=1\n      \
+      \ # print(self.j)\n        while self.j<sequential_signal.size:\n          \
+      \  if self.i < self.vectorsize:\n                self.range_clock_signal[self.i]\
+      \ = range_clock_signal[self.j]\n                self.sequential_signal[self.i]\
+      \ = sequential_signal[self.j]\n                self.i += 1\n               \
+      \ output_items[0][0] = 0\n                self.j+=1\n                continue\n\
+      \            #Gnu radio automatically takes output items as output, we just\
+      \ need to specify return length\n            #Block to calculate Delay \n  \
+      \          self.correlation_values = np.fft.ifft(np.fft.fft(self.range_clock_signal)\
+      \ * np.conj(np.fft.fft(self.sequential_signal)))\n            \n           \
+      \ self.sample_delay_count = np.argmax(np.abs(self.correlation_values))\n   \
+      \         #print(np.amax(self.correlation_values))\n            delay=self.vectorsize\
+      \ - self.sample_delay_count\n            #Delay_in_micro_seconds= 10**6 * delay/self.sample_rate\n\
+      \            output_items[0][0] = delay\n            \n\n            #Print\
+      \ Statements to diagnose\n            #print(self.i)\n            print(delay)\n\
+      \            #Reset variables\n            self.i=0\n        \n        self.j=0\n\
+      \       # output_items[0][:] = delay_in_micro_seconds\n       #Gnu radio automatically\
+      \ takes output items as output, we just need to specify return length\n    \
+      \    return 1\n"
     affinity: ''
     alias: ''
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
     sample_rate: samp_rate
-    vectorsize: '187500'
+    vectorsize: '18750'
   states:
     _io_cache: ('CorrelationDelayEstimator', 'CorrelationDelayEstimator', [('vectorsize',
       '18750'), ('sample_rate', '50000')], [('0', 'complex', 1), ('1', 'complex',
@@ -667,7 +672,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1544, 908.0]
+    coordinate: [1520, 912.0]
     rotation: 0
     state: true
 - name: epy_block_1_0
@@ -1157,10 +1162,12 @@ connections:
 - [blocks_complex_to_float_0, '1', blocks_null_sink_1, '0']
 - [blocks_complex_to_float_1, '0', qtgui_time_sink_x_2, '0']
 - [blocks_complex_to_float_1, '1', blocks_null_sink_2_0, '0']
+- [blocks_delay_0, '0', blocks_complex_to_float_1, '0']
 - [blocks_delay_0, '0', blocks_delay_1, '0']
 - [blocks_delay_0, '0', blocks_stream_mux_0_0, '1']
 - [blocks_delay_0, '0', blocks_stream_to_vector_1, '0']
 - [blocks_delay_0, '0', channels_channel_model_0, '0']
+- [blocks_delay_0, '0', epy_block_1, '0']
 - [blocks_delay_1, '0', blocks_add_xx_0, '0']
 - [blocks_stream_mux_0, '0', blocks_complex_to_float_0, '0']
 - [blocks_stream_mux_0, '0', blocks_delay_0, '0']
