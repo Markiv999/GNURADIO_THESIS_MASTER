@@ -206,7 +206,7 @@ class test2(gr.top_block, Qt.QWidget):
         self.blocks_null_sink_2_0 = blocks.null_sink(gr.sizeof_float*1)
         self.blocks_null_sink_2 = blocks.null_sink(gr.sizeof_float*1)
         self.blocks_null_sink_1 = blocks.null_sink(gr.sizeof_float*1)
-        self.blocks_delay_0 = blocks.delay(gr.sizeof_gr_complex*1, 2500)
+        self.blocks_delay_0 = blocks.delay(gr.sizeof_gr_complex*1, 18000)
         self.blocks_complex_to_float_1 = blocks.complex_to_float(1)
         self.blocks_complex_to_float_0 = blocks.complex_to_float(1)
         self.analog_sig_source_x_0_0_0_1 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, (frequency/8), 1, 0, 0)

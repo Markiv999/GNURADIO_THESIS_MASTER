@@ -321,7 +321,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    delay: '2500'
+    delay: '18000'
     maxoutbuf: '0'
     minoutbuf: '0'
     num_ports: '1'
@@ -331,7 +331,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1040, 1096.0]
+    coordinate: [1080, 1032.0]
     rotation: 0
     state: enabled
 - name: blocks_delay_1
@@ -627,37 +627,29 @@ blocks:
 - name: epy_block_1
   id: epy_block
   parameters:
-    _source_code: "import numpy as np\nfrom gnuradio import gr\nimport scipy as sp\n\
-      \nclass CorrelationDelayEstimator(gr.sync_block):\n    def __init__(self, vectorsize=18750,sample_rate=50000):\n\
-      \        gr.sync_block.__init__(\n            self,\n            name='CorrelationDelayEstimator',\n\
-      \            in_sig=[np.complex64, np.complex64],\n            out_sig=[np.float32]\n\
+    _source_code: "import numpy as np\nfrom gnuradio import gr\n\nclass CorrelationDelayEstimator(gr.sync_block):\n\
+      \    def __init__(self, vectorsize=18750, sample_rate=50000):\n        gr.sync_block.__init__(\n\
+      \            self,\n            name='CorrelationDelayEstimator',\n        \
+      \    in_sig=[np.complex64, np.complex64],\n            out_sig=[np.float32]\n\
       \        )\n        self.vectorsize = vectorsize\n        self.range_clock_signal\
       \ = np.zeros(vectorsize, dtype=np.complex64)\n        self.sequential_signal\
-      \ = np.zeros(vectorsize, dtype=np.complex64)\n        self.i = 0\n        self.j=0\n\
-      \        self.max = 0\n        self.sample_delay_count = 0\n        self.correlation_values\
-      \ = np.zeros(vectorsize, dtype=np.complex64)\n        self.sample_rate=sample_rate\n\
-      \n    def work(self, input_items, output_items):\n        #build from ground\
-      \ up\n        sequential_signal = input_items[0][:]\n        range_clock_signal\
-      \ = input_items[1][:]\n        #print(sequential_signal.size)\n        #print(\"\
-      yay\")\n        #print(range_clock_signal.size)\n       # self.j+=1\n      \
-      \ # print(self.j)\n        while self.j<sequential_signal.size:\n          \
-      \  if self.i < self.vectorsize:\n                self.range_clock_signal[self.i]\
+      \ = np.zeros(vectorsize, dtype=np.complex64)\n        self.i = 0\n        self.j\
+      \ = 0\n        self.sample_rate = sample_rate\n        self.correlation_values\
+      \ = np.zeros(vectorsize, dtype=np.complex64)\n\n    def work(self, input_items,\
+      \ output_items):\n        sequential_signal = input_items[0][:]\n        range_clock_signal\
+      \ = input_items[1][:]\n        num_samples = sequential_signal.shape[0]\n  \
+      \      output_items[0][:] = 0\n\n        while self.j < num_samples:\n     \
+      \       if self.i < self.vectorsize:\n                self.range_clock_signal[self.i]\
       \ = range_clock_signal[self.j]\n                self.sequential_signal[self.i]\
       \ = sequential_signal[self.j]\n                self.i += 1\n               \
-      \ output_items[0][0] = 0\n                self.j+=1\n                continue\n\
-      \            #Gnu radio automatically takes output items as output, we just\
-      \ need to specify return length\n            #Block to calculate Delay \n  \
-      \          self.correlation_values = np.fft.ifft(np.fft.fft(self.range_clock_signal)\
-      \ * np.conj(np.fft.fft(self.sequential_signal)))\n            \n           \
-      \ self.sample_delay_count = np.argmax(np.abs(self.correlation_values))\n   \
-      \         #print(np.amax(self.correlation_values))\n            delay=self.vectorsize\
-      \ - self.sample_delay_count\n            #Delay_in_micro_seconds= 10**6 * delay/self.sample_rate\n\
-      \            output_items[0][0] = delay\n            \n\n            #Print\
-      \ Statements to diagnose\n            #print(self.i)\n            print(delay)\n\
-      \            #Reset variables\n            self.i=0\n        \n        self.j=0\n\
-      \       # output_items[0][:] = delay_in_micro_seconds\n       #Gnu radio automatically\
-      \ takes output items as output, we just need to specify return length\n    \
-      \    return 1\n"
+      \ self.j += 1\n                continue\n\n            # calculate delay\n \
+      \           self.correlation_values = np.fft.ifft(np.fft.fft(self.range_clock_signal)\
+      \ * np.conj(np.fft.fft(self.sequential_signal)))\n            self.sample_delay_count\
+      \ = np.argmax(np.abs(self.correlation_values))\n            delay = self.vectorsize\
+      \ - self.sample_delay_count\n            delay_in_micro_seconds = 10 ** 6 *\
+      \ delay / self.sample_rate\n\n            output_items[0][:] = delay_in_micro_seconds\n\
+      \            self.i = 0\n            print(delay)\n\n        self.j = 0\n  \
+      \      return num_samples"
     affinity: ''
     alias: ''
     comment: ''
