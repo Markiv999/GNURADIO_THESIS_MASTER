@@ -21,6 +21,7 @@ class CorrelationDelayEstimator(gr.sync_block):
         sequential_signal = input_items[0][:]
         range_clock_signal = input_items[1][:]
         num_samples = sequential_signal.shape[0]
+        #print(num_samples)
         output_items[0][:] = 0
 
         while self.j < num_samples:

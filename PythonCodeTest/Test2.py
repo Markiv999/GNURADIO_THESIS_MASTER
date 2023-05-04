@@ -84,6 +84,8 @@ class test2(gr.top_block, Qt.QWidget):
         self.samp_rate = samp_rate = 500000
         self.frequency = frequency = 10000
         self.delay = delay = 5000
+        self.no_of_sources = no_of_sources = 10
+        self.vectorsize= vectorsize=0
 
         ##################################################
         # Blocks
@@ -220,11 +222,11 @@ class test2(gr.top_block, Qt.QWidget):
         
         # Code that creates the signal sources
         # Number of frequency sources, determines length of signal(and integration time needed)
-        no_of_sources=10
-        self.analog_sig_source_x_0_0_0_1 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, (frequency/8), 1, 0, 0)
-        self.analog_sig_source_x_0_0_0_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, (frequency/4), 1, 0, 0)
-        self.analog_sig_source_x_0_0_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, 5000, 1, 0, 0)
-        self.analog_sig_source_x_0_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, 10000, 1, 0, 0)
+        tempno1=0
+        while tempno1<no_of_sources:
+            self.analog_noise_source[tempno1]= analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, (frequency/(2**tempno1)), 1, 0, 0)
+            vectorsize+=(frequency/(2**tempno1))
+            temp1+=1
         
         self.analog_noise_source_x_0 = analog.noise_source_c(analog.GR_GAUSSIAN, variable_qtgui_range_0, 0)
         self.analog_agc_xx_0 = analog.agc_cc((1e-4), 1.0, 1)
