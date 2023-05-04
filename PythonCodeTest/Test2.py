@@ -217,10 +217,15 @@ class test2(gr.top_block, Qt.QWidget):
         self.blocks_complex_to_float_1 = blocks.complex_to_float(1)
         self.blocks_complex_to_float_0 = blocks.complex_to_float(1)
         self.blocks_add_xx_0 = blocks.add_vcc(1)
+        
+        # Code that creates the signal sources
+        # Number of frequency sources, determines length of signal(and integration time needed)
+        no_of_sources=10
         self.analog_sig_source_x_0_0_0_1 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, (frequency/8), 1, 0, 0)
         self.analog_sig_source_x_0_0_0_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, (frequency/4), 1, 0, 0)
         self.analog_sig_source_x_0_0_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, 5000, 1, 0, 0)
         self.analog_sig_source_x_0_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, 10000, 1, 0, 0)
+        
         self.analog_noise_source_x_0 = analog.noise_source_c(analog.GR_GAUSSIAN, variable_qtgui_range_0, 0)
         self.analog_agc_xx_0 = analog.agc_cc((1e-4), 1.0, 1)
         self.analog_agc_xx_0.set_max_gain(65536)

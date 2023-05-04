@@ -33,6 +33,18 @@ options:
     state: enabled
 
 blocks:
+- name: delay
+  id: variable
+  parameters:
+    comment: ''
+    value: '5000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [656, 160.0]
+    rotation: 0
+    state: true
 - name: frequency
   id: variable
   parameters:
@@ -342,7 +354,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    delay: '5000'
+    delay: delay
     maxoutbuf: '0'
     minoutbuf: '0'
     num_ports: '1'
@@ -352,9 +364,85 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [824, 1104.0]
+    coordinate: [944, 1136.0]
     rotation: 0
     state: enabled
+- name: blocks_delay_0_0
+  id: blocks_delay
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    delay: delay
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_ports: '1'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [664, 640.0]
+    rotation: 0
+    state: disabled
+- name: blocks_delay_0_1
+  id: blocks_delay
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    delay: delay
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_ports: '1'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [704, 808.0]
+    rotation: 0
+    state: disabled
+- name: blocks_delay_0_2
+  id: blocks_delay
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    delay: delay
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_ports: '1'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [736, 1024.0]
+    rotation: 0
+    state: disabled
+- name: blocks_delay_0_3
+  id: blocks_delay
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    delay: delay
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_ports: '1'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [720, 888.0]
+    rotation: 0
+    state: disabled
 - name: blocks_delay_1
   id: blocks_delay
   parameters:
@@ -458,7 +546,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [848, 784.0]
+    coordinate: [1008, 752.0]
     rotation: 0
     state: true
 - name: blocks_stream_mux_0_0
@@ -478,6 +566,25 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [576, 1304.0]
+    rotation: 0
+    state: disabled
+- name: blocks_stream_mux_0_1
+  id: blocks_stream_mux
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    lengths: variable_0
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '4'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [920, 968.0]
     rotation: 0
     state: disabled
 - name: blocks_stream_to_vector_0
@@ -513,7 +620,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [736, 736.0]
+    coordinate: [744, 736.0]
     rotation: 0
     state: disabled
 - name: blocks_stream_to_vector_1
@@ -1164,9 +1271,12 @@ connections:
 - [analog_sig_source_x_0, '0', blocks_and_xx_0, '0']
 - [analog_sig_source_x_0, '0', blocks_null_sink_0, '0']
 - [analog_sig_source_x_0_0, '0', blocks_throttle_0, '0']
+- [analog_sig_source_x_0_0_0, '0', blocks_delay_0_1, '0']
 - [analog_sig_source_x_0_0_0, '0', blocks_stream_mux_0, '1']
 - [analog_sig_source_x_0_0_0, '0', blocks_stream_to_vector_0_0, '0']
+- [analog_sig_source_x_0_0_0_0, '0', blocks_delay_0_3, '0']
 - [analog_sig_source_x_0_0_0_0, '0', blocks_stream_mux_0, '2']
+- [analog_sig_source_x_0_0_0_1, '0', blocks_delay_0_2, '0']
 - [analog_sig_source_x_0_0_0_1, '0', blocks_stream_mux_0, '3']
 - [blocks_add_xx_0, '0', analog_agc_xx_0, '0']
 - [blocks_complex_to_float_0, '0', qtgui_time_sink_x_2, '1']
@@ -1178,6 +1288,10 @@ connections:
 - [blocks_delay_0, '0', blocks_stream_mux_0_0, '1']
 - [blocks_delay_0, '0', blocks_stream_to_vector_1, '0']
 - [blocks_delay_0, '0', channels_channel_model_0, '0']
+- [blocks_delay_0_0, '0', blocks_stream_mux_0_1, '0']
+- [blocks_delay_0_1, '0', blocks_stream_mux_0_1, '1']
+- [blocks_delay_0_2, '0', blocks_stream_mux_0_1, '3']
+- [blocks_delay_0_3, '0', blocks_stream_mux_0_1, '2']
 - [blocks_delay_1, '0', blocks_add_xx_0, '0']
 - [blocks_stream_mux_0, '0', blocks_complex_to_float_0, '0']
 - [blocks_stream_mux_0, '0', blocks_delay_0, '0']
@@ -1187,8 +1301,10 @@ connections:
 - [blocks_stream_mux_0, '0', qtgui_time_sink_x_0, '0']
 - [blocks_stream_mux_0, '0', qtgui_time_sink_x_1, '1']
 - [blocks_stream_mux_0_0, '0', blocks_add_xx_0, '0']
+- [blocks_stream_mux_0_1, '0', blocks_add_xx_0, '0']
 - [blocks_stream_to_vector_0, '0', epy_block_0, '0']
 - [blocks_stream_to_vector_0_0, '0', epy_block_0, '1']
+- [blocks_throttle_0, '0', blocks_delay_0_0, '0']
 - [blocks_throttle_0, '0', blocks_stream_mux_0, '0']
 - [blocks_throttle_0, '0', blocks_stream_to_vector_0, '0']
 - [blocks_vector_to_stream_0, '0', qtgui_time_sink_x_0, '0']
