@@ -22,23 +22,25 @@ class CorrelationDelayEstimator(gr.sync_block):
         range_clock_signal = input_items[1][:]
         num_samples = sequential_signal.shape[0]
         #print(num_samples)
-        output_items[0][:] = 0
-
+        
+       #while there are still values in the buffer
         while self.j < num_samples:
             if self.i < self.vectorsize:
+                #Take the latest values from the buffer
                 self.range_clock_signal[self.i] = range_clock_signal[self.j]
                 self.sequential_signal[self.i] = sequential_signal[self.j]
+                output_items[0][self.j] = 0
                 self.i += 1
-                self.j += 1
+                self.j += 1            
                 continue
 
-            # calculate delay
+            # calculate delay, then return to the while loop
             self.correlation_values = np.fft.ifft(np.fft.fft(self.range_clock_signal) * np.conj(np.fft.fft(self.sequential_signal)))
             self.sample_delay_count = np.argmax(np.abs(self.correlation_values))
             delay = self.vectorsize - self.sample_delay_count
             delay_in_micro_seconds = 10 ** 6 * delay / self.sample_rate
 
-            output_items[0][:] = delay_in_micro_seconds
+            output_items[0][self.j] = delay_in_micro_seconds
             self.i = 0
             print(delay)
 

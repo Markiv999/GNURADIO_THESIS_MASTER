@@ -84,7 +84,7 @@ class test2(gr.top_block, Qt.QWidget):
         self.samp_rate = samp_rate = 500000
         self.frequency = frequency = 10000
         self.delay2 = delay2 = 3000
-        self.delay = delay = 0
+        self.delay = delay = 5000
 
         ##################################################
         # Blocks
@@ -93,7 +93,7 @@ class test2(gr.top_block, Qt.QWidget):
         self._variable_qtgui_range_0_range = Range(0, 100, 0.05, 0, 200)
         self._variable_qtgui_range_0_win = RangeWidget(self._variable_qtgui_range_0_range, self.set_variable_qtgui_range_0, "'variable_qtgui_range_0'", "counter_slider", float, QtCore.Qt.Horizontal)
         self.top_layout.addWidget(self._variable_qtgui_range_0_win)
-        self._delay_range = Range(0, 20000, 1, 0, 200)
+        self._delay_range = Range(0, 20000, 1, 5000, 200)
         self._delay_win = RangeWidget(self._delay_range, self.set_delay, "'delay'", "counter_slider", float, QtCore.Qt.Horizontal)
         self.top_layout.addWidget(self._delay_win)
         # Create the options list
@@ -213,6 +213,7 @@ class test2(gr.top_block, Qt.QWidget):
         self.top_layout.addWidget(self._qtgui_time_sink_x_0_win)
         self.epy_block_1 = epy_block_1.CorrelationDelayEstimator(vectorsize=18750, sample_rate=samp_rate)
         self.blocks_throttle_0 = blocks.throttle(gr.sizeof_gr_complex*1, samp_rate,True)
+        self.blocks_stream_mux_0_0 = blocks.stream_mux(gr.sizeof_gr_complex*1, (18750,18750))
         self.blocks_stream_mux_0 = blocks.stream_mux(gr.sizeof_gr_complex*1, variable_0)
         self.blocks_null_sink_2_0 = blocks.null_sink(gr.sizeof_float*1)
         self.blocks_null_sink_2 = blocks.null_sink(gr.sizeof_float*1)
@@ -245,11 +246,13 @@ class test2(gr.top_block, Qt.QWidget):
         self.connect((self.blocks_complex_to_float_0, 0), (self.qtgui_time_sink_x_2, 1))
         self.connect((self.blocks_complex_to_float_1, 1), (self.blocks_null_sink_2_0, 0))
         self.connect((self.blocks_complex_to_float_1, 0), (self.qtgui_time_sink_x_2, 0))
-        self.connect((self.blocks_delay_0, 0), (self.blocks_add_xx_0, 0))
+        self.connect((self.blocks_delay_0, 0), (self.blocks_stream_mux_0_0, 1))
         self.connect((self.blocks_stream_mux_0, 0), (self.blocks_complex_to_float_0, 0))
         self.connect((self.blocks_stream_mux_0, 0), (self.blocks_delay_0, 0))
+        self.connect((self.blocks_stream_mux_0, 0), (self.blocks_stream_mux_0_0, 0))
         self.connect((self.blocks_stream_mux_0, 0), (self.epy_block_1, 1))
         self.connect((self.blocks_stream_mux_0, 0), (self.qtgui_time_sink_x_0, 0))
+        self.connect((self.blocks_stream_mux_0_0, 0), (self.blocks_add_xx_0, 0))
         self.connect((self.blocks_throttle_0, 0), (self.blocks_stream_mux_0, 0))
         self.connect((self.epy_block_1, 0), (self.blocks_null_sink_2, 0))
 

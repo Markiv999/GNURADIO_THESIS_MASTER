@@ -45,7 +45,7 @@ blocks:
     start: '0'
     step: '1'
     stop: '20000'
-    value: '0'
+    value: '5000'
     widget: counter_slider
   states:
     bus_sink: false
@@ -311,7 +311,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1560, 1120.0]
+    coordinate: [1616, 1040.0]
     rotation: 0
     state: enabled
 - name: blocks_complex_to_float_1
@@ -346,7 +346,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1248, 960.0]
+    coordinate: [1240, 872.0]
     rotation: 0
     state: enabled
 - name: blocks_delay_0_0
@@ -511,7 +511,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1008, 752.0]
+    coordinate: [1016, 744.0]
     rotation: 0
     state: true
 - name: blocks_stream_mux_0_0
@@ -530,9 +530,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [368, 1376.0]
+    coordinate: [624, 1320.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: blocks_stream_mux_0_1
   id: blocks_stream_mux
   parameters:
@@ -550,24 +550,6 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [920, 968.0]
-    rotation: 0
-    state: disabled
-- name: blocks_stream_to_vector_0
-  id: blocks_stream_to_vector
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    num_items: '5000'
-    type: float
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [848, 624.0]
     rotation: 0
     state: disabled
 - name: blocks_throttle_0
@@ -624,16 +606,18 @@ blocks:
       \ = np.zeros(vectorsize, dtype=np.complex64)\n\n    def work(self, input_items,\
       \ output_items):\n        sequential_signal = input_items[0][:]\n        range_clock_signal\
       \ = input_items[1][:]\n        num_samples = sequential_signal.shape[0]\n  \
-      \      #print(num_samples)\n        output_items[0][:] = 0\n\n        while\
-      \ self.j < num_samples:\n            if self.i < self.vectorsize:\n        \
-      \        self.range_clock_signal[self.i] = range_clock_signal[self.j]\n    \
-      \            self.sequential_signal[self.i] = sequential_signal[self.j]\n  \
-      \              self.i += 1\n                self.j += 1\n                continue\n\
-      \n            # calculate delay\n            self.correlation_values = np.fft.ifft(np.fft.fft(self.range_clock_signal)\
+      \      #print(num_samples)\n        \n       #while there are still values in\
+      \ the buffer\n        while self.j < num_samples:\n            if self.i < self.vectorsize:\n\
+      \                #Take the latest values from the buffer\n                self.range_clock_signal[self.i]\
+      \ = range_clock_signal[self.j]\n                self.sequential_signal[self.i]\
+      \ = sequential_signal[self.j]\n                output_items[0][self.j] = 0\n\
+      \                self.i += 1\n                self.j += 1            \n    \
+      \            continue\n\n            # calculate delay, then return to the while\
+      \ loop\n            self.correlation_values = np.fft.ifft(np.fft.fft(self.range_clock_signal)\
       \ * np.conj(np.fft.fft(self.sequential_signal)))\n            self.sample_delay_count\
       \ = np.argmax(np.abs(self.correlation_values))\n            delay = self.vectorsize\
       \ - self.sample_delay_count\n            delay_in_micro_seconds = 10 ** 6 *\
-      \ delay / self.sample_rate\n\n            output_items[0][:] = delay_in_micro_seconds\n\
+      \ delay / self.sample_rate\n\n            output_items[0][self.j] = delay_in_micro_seconds\n\
       \            self.i = 0\n            print(delay)\n\n        self.j = 0\n  \
       \      return num_samples"
     affinity: ''
@@ -1055,7 +1039,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1928, 1100.0]
+    coordinate: [1888, 876.0]
     rotation: 0
     state: enabled
 
@@ -1075,7 +1059,6 @@ connections:
 - [blocks_complex_to_float_0, '1', blocks_null_sink_1, '0']
 - [blocks_complex_to_float_1, '0', qtgui_time_sink_x_2, '0']
 - [blocks_complex_to_float_1, '1', blocks_null_sink_2_0, '0']
-- [blocks_delay_0, '0', blocks_add_xx_0, '0']
 - [blocks_delay_0, '0', blocks_delay_1, '0']
 - [blocks_delay_0, '0', blocks_stream_mux_0_0, '1']
 - [blocks_delay_0, '0', channels_channel_model_0, '0']
@@ -1086,6 +1069,7 @@ connections:
 - [blocks_delay_1, '0', blocks_add_xx_0, '0']
 - [blocks_stream_mux_0, '0', blocks_complex_to_float_0, '0']
 - [blocks_stream_mux_0, '0', blocks_delay_0, '0']
+- [blocks_stream_mux_0, '0', blocks_stream_mux_0_0, '0']
 - [blocks_stream_mux_0, '0', epy_block_1, '1']
 - [blocks_stream_mux_0, '0', qtgui_time_sink_x_0, '0']
 - [blocks_stream_mux_0, '0', qtgui_time_sink_x_1, '1']
@@ -1093,7 +1077,6 @@ connections:
 - [blocks_stream_mux_0_1, '0', blocks_add_xx_0, '0']
 - [blocks_throttle_0, '0', blocks_delay_0_0, '0']
 - [blocks_throttle_0, '0', blocks_stream_mux_0, '0']
-- [blocks_throttle_0, '0', blocks_stream_to_vector_0, '0']
 - [channels_channel_model_0, '0', analog_agc_xx_0, '0']
 - [channels_channel_model_0, '0', blocks_complex_to_float_1, '0']
 - [channels_channel_model_0, '0', epy_block_1, '0']
