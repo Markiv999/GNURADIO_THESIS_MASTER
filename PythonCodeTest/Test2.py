@@ -80,14 +80,11 @@ class test2(gr.top_block, Qt.QWidget):
         ##################################################
         self.variable_qtgui_range_0 = variable_qtgui_range_0 = 0
         self.variable_qtgui_chooser_0 = variable_qtgui_chooser_0 = 0
+        self.variable_0 = variable_0 = (10000,5000,2500,1250)
         self.samp_rate = samp_rate = 500000
         self.frequency = frequency = 10000
+        self.delay2 = delay2 = 3000
         self.delay = delay = 5000
-        self.no_of_sources = no_of_sources = 10
-        self.vectorsize= vectorsize=0
-
-        #derived variables
-        self.variable_0 = variable_0 = []
 
         ##################################################
         # Blocks
@@ -96,6 +93,9 @@ class test2(gr.top_block, Qt.QWidget):
         self._variable_qtgui_range_0_range = Range(0, 100, 0.05, 0, 200)
         self._variable_qtgui_range_0_win = RangeWidget(self._variable_qtgui_range_0_range, self.set_variable_qtgui_range_0, "'variable_qtgui_range_0'", "counter_slider", float, QtCore.Qt.Horizontal)
         self.top_layout.addWidget(self._variable_qtgui_range_0_win)
+        self._delay_range = Range(0, 20000, 1, 5000, 200)
+        self._delay_win = RangeWidget(self._delay_range, self.set_delay, "'delay'", "counter_slider", float, QtCore.Qt.Horizontal)
+        self.top_layout.addWidget(self._delay_win)
         # Create the options list
         self._variable_qtgui_chooser_0_options = [0, 1000, 2]
         # Create the labels list
@@ -209,17 +209,6 @@ class test2(gr.top_block, Qt.QWidget):
             self.qtgui_time_sink_x_0.set_line_marker(i, markers[i])
             self.qtgui_time_sink_x_0.set_line_alpha(i, alphas[i])
 
-
-
-        # Code that creates the signal sources
-        # Number of frequency sources, determines length of signal(and integration time needed)
-        tempno1=0
-        while tempno1<no_of_sources:
-            self.analog_sig_source[tempno1]= analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, (frequency/(2**tempno1)), 1, 0, 0)
-            vectorsize+=(frequency/(2**tempno1))
-            variable_0.append(vectorsize)
-            tempno1+=1
-
         self._qtgui_time_sink_x_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0.qwidget(), Qt.QWidget)
         self.top_layout.addWidget(self._qtgui_time_sink_x_0_win)
         self.epy_block_1 = epy_block_1.CorrelationDelayEstimator(vectorsize=18750, sample_rate=samp_rate)
@@ -232,8 +221,10 @@ class test2(gr.top_block, Qt.QWidget):
         self.blocks_complex_to_float_1 = blocks.complex_to_float(1)
         self.blocks_complex_to_float_0 = blocks.complex_to_float(1)
         self.blocks_add_xx_0 = blocks.add_vcc(1)
-        
-        
+        self.analog_sig_source_x_0_0_0_1 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, (frequency/8), 1, 0, 0)
+        self.analog_sig_source_x_0_0_0_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, (frequency/4), 1, 0, 0)
+        self.analog_sig_source_x_0_0_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, 5000, 1, 0, 0)
+        self.analog_sig_source_x_0_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, 10000, 1, 0, 0)
         self.analog_noise_source_x_0 = analog.noise_source_c(analog.GR_GAUSSIAN, variable_qtgui_range_0, 0)
         self.analog_agc_xx_0 = analog.agc_cc((1e-4), 1.0, 1)
         self.analog_agc_xx_0.set_max_gain(65536)
@@ -245,19 +236,10 @@ class test2(gr.top_block, Qt.QWidget):
         self.connect((self.analog_agc_xx_0, 0), (self.blocks_complex_to_float_1, 0))
         self.connect((self.analog_agc_xx_0, 0), (self.epy_block_1, 0))
         self.connect((self.analog_noise_source_x_0, 0), (self.blocks_add_xx_0, 1))
-
-        #Connection loop to connect all signal sources to Mux
-        tempno1=1
-        self.connect((self.analog_sig_source[0], 0), (self.blocks_throttle_0, 0))
-        while tempno1<no_of_sources:
-            self.connect((self.analog_sig_source[tempno1],0),(self.blocks_stream_mux_0,tempno1))
-            tempno1+=1
-       # self.connect((self.analog_sig_source_x_0_0, 0), (self.blocks_throttle_0, 0))
-       # self.connect((self.analog_sig_source_x_0_0_0, 0), (self.blocks_stream_mux_0, 1))
-       # self.connect((self.analog_sig_source_x_0_0_0_0, 0), (self.blocks_stream_mux_0, 2))
-       # self.connect((self.analog_sig_source_x_0_0_0_1, 0), (self.blocks_stream_mux_0, 3))
-
-
+        self.connect((self.analog_sig_source_x_0_0, 0), (self.blocks_throttle_0, 0))
+        self.connect((self.analog_sig_source_x_0_0_0, 0), (self.blocks_stream_mux_0, 1))
+        self.connect((self.analog_sig_source_x_0_0_0_0, 0), (self.blocks_stream_mux_0, 2))
+        self.connect((self.analog_sig_source_x_0_0_0_1, 0), (self.blocks_stream_mux_0, 3))
         self.connect((self.blocks_add_xx_0, 0), (self.analog_agc_xx_0, 0))
         self.connect((self.blocks_complex_to_float_0, 1), (self.blocks_null_sink_1, 0))
         self.connect((self.blocks_complex_to_float_0, 0), (self.qtgui_time_sink_x_2, 1))
@@ -321,6 +303,12 @@ class test2(gr.top_block, Qt.QWidget):
         self.frequency = frequency
         self.analog_sig_source_x_0_0_0_0.set_frequency((self.frequency/4))
         self.analog_sig_source_x_0_0_0_1.set_frequency((self.frequency/8))
+
+    def get_delay2(self):
+        return self.delay2
+
+    def set_delay2(self, delay2):
+        self.delay2 = delay2
 
     def get_delay(self):
         return self.delay
