@@ -53,12 +53,12 @@ blocks:
     bus_structure: null
     coordinate: [704, 16.0]
     rotation: 0
-    state: true
-- name: delay2
+    state: disabled
+- name: delay
   id: variable
   parameters:
     comment: ''
-    value: '3000'
+    value: variable_function_probe_0
   states:
     bus_sink: false
     bus_source: false
@@ -99,7 +99,23 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1440, 496.0]
+    coordinate: [1056, 36.0]
+    rotation: 0
+    state: true
+- name: variable_function_probe_0
+  id: variable_function_probe
+  parameters:
+    block_id: my_block_0
+    comment: ''
+    function_args: ''
+    function_name: CorrelationDelayEstimator
+    poll_rate: samp_rate
+    value: '5000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1856, 204.0]
     rotation: 0
     state: true
 - name: variable_qtgui_chooser_0
@@ -129,7 +145,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1648, 456.0]
+    coordinate: [840, 16.0]
     rotation: 0
     state: true
 - name: variable_qtgui_range_0
@@ -330,6 +346,39 @@ blocks:
     coordinate: [1624, 1296.0]
     rotation: 0
     state: enabled
+- name: blocks_complex_to_float_2_0
+  id: blocks_complex_to_float
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1432, 344.0]
+    rotation: 0
+    state: disabled
+- name: blocks_complex_to_interleaved_char_0
+  id: blocks_complex_to_interleaved_char
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    scale_factor: '1.0'
+    vector_output: 'False'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1224, 784.0]
+    rotation: 0
+    state: true
 - name: blocks_delay_0
   id: blocks_delay
   parameters:
@@ -444,6 +493,23 @@ blocks:
     coordinate: [776, 1456.0]
     rotation: 0
     state: disabled
+- name: blocks_null_sink_0
+  id: blocks_null_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    bus_structure_sink: '[[0,],]'
+    comment: ''
+    num_inputs: '1'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2208, 464.0]
+    rotation: 0
+    state: disabled
 - name: blocks_null_sink_1
   id: blocks_null_sink
   parameters:
@@ -461,7 +527,7 @@ blocks:
     coordinate: [1960, 1360.0]
     rotation: 0
     state: enabled
-- name: blocks_null_sink_2
+- name: blocks_null_sink_1_0
   id: blocks_null_sink
   parameters:
     affinity: ''
@@ -475,7 +541,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1968, 1288.0]
+    coordinate: [2048, 952.0]
     rotation: 0
     state: enabled
 - name: blocks_null_sink_2_0
@@ -514,25 +580,6 @@ blocks:
     coordinate: [1056, 432.0]
     rotation: 0
     state: true
-- name: blocks_stream_mux_0_0
-  id: blocks_stream_mux
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    lengths: (18750,18750)
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    num_inputs: '2'
-    type: complex
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1232, 1048.0]
-    rotation: 0
-    state: enabled
 - name: blocks_stream_mux_0_1
   id: blocks_stream_mux
   parameters:
@@ -592,49 +639,74 @@ blocks:
     coordinate: [1064, 1216.0]
     rotation: 0
     state: disabled
+- name: digital_cpmmod_bc_0
+  id: digital_cpmmod_bc
+  parameters:
+    L: '4'
+    affinity: ''
+    alias: ''
+    beta: '0.3'
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    mod_index: '0.5'
+    samples_per_symbol: '4'
+    type: analog.cpm.LRC
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1240, 288.0]
+    rotation: 0
+    state: true
 - name: epy_block_1
   id: epy_block
   parameters:
-    _source_code: "import numpy as np\nfrom gnuradio import gr\n\nclass CorrelationDelayEstimator(gr.sync_block):\n\
-      \    def __init__(self, vectorsize=18750, sample_rate=500000):\n        gr.sync_block.__init__(\n\
+    _source_code: "from turtle import delay\nimport numpy as np\nfrom gnuradio import\
+      \ gr\n\nclass CorrelationDelayEstimator(gr.sync_block):\n    def __init__(self,\
+      \ vectorsize=18750, sample_rate=500000, delayinitial=0):\n        gr.sync_block.__init__(\n\
       \            self,\n            name='CorrelationDelayEstimator',\n        \
       \    in_sig=[np.complex64, np.complex64],\n            out_sig=[np.float32]\n\
       \        )\n        self.vectorsize = vectorsize\n        self.range_clock_signal\
       \ = np.zeros(vectorsize, dtype=np.complex64)\n        self.sequential_signal\
       \ = np.zeros(vectorsize, dtype=np.complex64)\n        self.i = 0\n        self.j\
-      \ = 0\n        self.sample_rate = sample_rate\n        self.correlation_values\
-      \ = np.zeros(vectorsize, dtype=np.complex64)\n\n    def work(self, input_items,\
-      \ output_items):\n        sequential_signal = input_items[0][:]\n        range_clock_signal\
-      \ = input_items[1][:]\n        num_samples = sequential_signal.shape[0]\n  \
-      \      #print(num_samples)\n        \n       #while there are still values in\
+      \ = 0\n        self.delayiterator=0\n        self.sample_rate = sample_rate\n\
+      \        self.correlation_values = np.zeros(vectorsize, dtype=np.complex64)\n\
+      \        self.delayinitial=delayinitial\n\n    def work(self, input_items, output_items):\n\
+      \        sequential_signal = input_items[0][:]\n        range_clock_signal =\
+      \ input_items[1][:]\n        num_samples = sequential_signal.shape[0]\n    \
+      \    #print(num_samples)\n        \n       #while there are still values in\
       \ the buffer\n        while self.j < num_samples:\n            if self.i < self.vectorsize:\n\
       \                #Take the latest values from the buffer\n                self.range_clock_signal[self.i]\
       \ = range_clock_signal[self.j]\n                self.sequential_signal[self.i]\
-      \ = sequential_signal[self.j]\n                output_items[0][self.j] = 0\n\
+      \ = sequential_signal[self.j]\n                #output_items[0][self.j] = 0\n\
       \                self.i += 1\n                self.j += 1            \n    \
-      \            continue\n\n            # calculate delay, then return to the while\
-      \ loop\n            self.correlation_values = np.fft.ifft(np.fft.fft(self.range_clock_signal)\
-      \ * np.conj(np.fft.fft(self.sequential_signal)))\n            self.sample_delay_count\
-      \ = np.argmax(np.abs(self.correlation_values))\n            delay = self.vectorsize\
-      \ - self.sample_delay_count\n            delay_in_micro_seconds = 10 ** 6 *\
-      \ delay / self.sample_rate\n\n            output_items[0][self.j] = delay_in_micro_seconds\n\
-      \            self.i = 0\n            print(delay)\n\n        self.j = 0\n  \
-      \      return num_samples"
+      \            continue\n            #\n            self.delayiterator+=1\n  \
+      \          output_items[0][0] = self.delayiterator\n            \n         \
+      \   # calculate delay, then return to the while loop\n            self.correlation_values\
+      \ = np.fft.ifft(np.fft.fft(self.range_clock_signal) * np.conj(np.fft.fft(self.sequential_signal)))\n\
+      \            self.sample_delay_count = np.argmax(np.abs(self.correlation_values))\n\
+      \            delay = self.vectorsize - self.sample_delay_count\n           \
+      \ delay_in_micro_seconds = 10 ** 6 * delay / self.sample_rate\n            self.delayinitial=10000\n\
+      \            \n            self.i = 0\n            print(delay)\n\n        self.j\
+      \ = 0\n        return 1"
     affinity: ''
     alias: ''
     comment: ''
+    delayinitial: delay
     maxoutbuf: '0'
     minoutbuf: '0'
     sample_rate: samp_rate
     vectorsize: '18750'
   states:
     _io_cache: ('CorrelationDelayEstimator', 'CorrelationDelayEstimator', [('vectorsize',
-      '18750'), ('sample_rate', '500000')], [('0', 'complex', 1), ('1', 'complex',
-      1)], [('0', 'float', 1)], '', ['sample_rate', 'vectorsize'])
+      '18750'), ('sample_rate', '500000'), ('delayinitial', '0')], [('0', 'complex',
+      1), ('1', 'complex', 1)], [('0', 'float', 1)], '', ['delayinitial', 'sample_rate',
+      'vectorsize'])
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1408, 884.0]
+    coordinate: [1704, 908.0]
     rotation: 0
     state: enabled
 - name: epy_block_1_0
@@ -664,6 +736,87 @@ blocks:
     coordinate: [0, 560.0]
     rotation: 0
     state: disabled
+- name: qtgui_freq_sink_x_0
+  id: qtgui_freq_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    average: '1.0'
+    axislabels: 'True'
+    bw: samp_rate
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    ctrlpanel: 'False'
+    fc: '0'
+    fftsize: '1024'
+    freqhalf: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label: Relative Gain
+    label1: ''
+    label10: ''''''
+    label2: ''''''
+    label3: ''''''
+    label4: ''''''
+    label5: ''''''
+    label6: ''''''
+    label7: ''''''
+    label8: ''''''
+    label9: ''''''
+    legend: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '""'
+    nconnections: '1'
+    norm_window: 'False'
+    showports: 'False'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_tag: '""'
+    type: complex
+    units: dB
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    wintype: window.WIN_BLACKMAN_hARRIS
+    ymax: '10'
+    ymin: '-140'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1688, 388.0]
+    rotation: 0
+    state: true
 - name: qtgui_histogram_sink_x_0
   id: qtgui_histogram_sink_x
   parameters:
@@ -748,7 +901,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1936, 712.0]
+    coordinate: [2056, 792.0]
     rotation: 0
     state: disabled
 - name: qtgui_time_sink_x_0
@@ -845,7 +998,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1664, 788.0]
+    coordinate: [1920, 620.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_1
@@ -942,7 +1095,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1640, 636.0]
+    coordinate: [1832, 764.0]
     rotation: 0
     state: disabled
 - name: qtgui_time_sink_x_2
@@ -1042,6 +1195,103 @@ blocks:
     coordinate: [2000, 1044.0]
     rotation: 0
     state: enabled
+- name: qtgui_time_sink_x_2_0
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'False'
+    grid: 'False'
+    gui_hint: ''
+    label1: Signal 1
+    label10: Signal 10
+    label2: Signal 2
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '""'
+    nconnections: '1'
+    size: '1024'
+    srate: samp_rate
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: float
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1992, 500.0]
+    rotation: 0
+    state: disabled
 
 connections:
 - [analog_agc_xx_0, '0', blocks_complex_to_float_1, '0']
@@ -1059,8 +1309,11 @@ connections:
 - [blocks_complex_to_float_0, '1', blocks_null_sink_1, '0']
 - [blocks_complex_to_float_1, '0', qtgui_time_sink_x_2, '0']
 - [blocks_complex_to_float_1, '1', blocks_null_sink_2_0, '0']
+- [blocks_complex_to_float_2_0, '0', qtgui_time_sink_x_2_0, '0']
+- [blocks_complex_to_float_2_0, '1', blocks_null_sink_0, '0']
+- [blocks_complex_to_interleaved_char_0, '0', digital_cpmmod_bc_0, '0']
+- [blocks_delay_0, '0', blocks_add_xx_0, '0']
 - [blocks_delay_0, '0', blocks_delay_1, '0']
-- [blocks_delay_0, '0', blocks_stream_mux_0_0, '1']
 - [blocks_delay_0, '0', channels_channel_model_0, '0']
 - [blocks_delay_0_0, '0', blocks_stream_mux_0_1, '0']
 - [blocks_delay_0_1, '0', blocks_stream_mux_0_1, '1']
@@ -1068,20 +1321,20 @@ connections:
 - [blocks_delay_0_3, '0', blocks_stream_mux_0_1, '2']
 - [blocks_delay_1, '0', blocks_add_xx_0, '0']
 - [blocks_stream_mux_0, '0', blocks_complex_to_float_0, '0']
+- [blocks_stream_mux_0, '0', blocks_complex_to_interleaved_char_0, '0']
 - [blocks_stream_mux_0, '0', blocks_delay_0, '0']
-- [blocks_stream_mux_0, '0', blocks_stream_mux_0_0, '0']
 - [blocks_stream_mux_0, '0', epy_block_1, '1']
-- [blocks_stream_mux_0, '0', qtgui_time_sink_x_0, '0']
 - [blocks_stream_mux_0, '0', qtgui_time_sink_x_1, '1']
-- [blocks_stream_mux_0_0, '0', blocks_add_xx_0, '0']
 - [blocks_stream_mux_0_1, '0', blocks_add_xx_0, '0']
 - [blocks_throttle_0, '0', blocks_delay_0_0, '0']
 - [blocks_throttle_0, '0', blocks_stream_mux_0, '0']
 - [channels_channel_model_0, '0', analog_agc_xx_0, '0']
 - [channels_channel_model_0, '0', blocks_complex_to_float_1, '0']
 - [channels_channel_model_0, '0', epy_block_1, '0']
-- [epy_block_1, '0', blocks_null_sink_2, '0']
-- [epy_block_1, '0', qtgui_histogram_sink_x_0, '0']
+- [digital_cpmmod_bc_0, '0', blocks_complex_to_float_2_0, '0']
+- [digital_cpmmod_bc_0, '0', qtgui_freq_sink_x_0, '0']
+- [digital_cpmmod_bc_0, '0', qtgui_time_sink_x_0, '0']
+- [epy_block_1, '0', blocks_null_sink_1_0, '0']
 
 metadata:
   file_format: 1
