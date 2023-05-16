@@ -304,12 +304,19 @@ class test2(gr.top_block, Qt.QWidget):
         self.connect((self.blocks_complex_to_float_0, 0), (self.qtgui_time_sink_x_2, 1))
         self.connect((self.blocks_complex_to_float_1, 1), (self.blocks_null_sink_2_0, 0))
         self.connect((self.blocks_complex_to_float_1, 0), (self.qtgui_time_sink_x_2, 0))
+<<<<<<< Updated upstream
         self.connect((self.blocks_complex_to_interleaved_char_0, 0), (self.digital_cpmmod_bc_0, 0))
+=======
+>>>>>>> Stashed changes
         self.connect((self.blocks_delay_0, 0), (self.blocks_add_xx_0, 0))
         self.connect((self.blocks_stream_mux_0, 0), (self.blocks_complex_to_float_0, 0))
         self.connect((self.blocks_stream_mux_0, 0), (self.blocks_complex_to_interleaved_char_0, 0))
         self.connect((self.blocks_stream_mux_0, 0), (self.blocks_delay_0, 0))
         self.connect((self.blocks_stream_mux_0, 0), (self.epy_block_1, 1))
+<<<<<<< Updated upstream
+=======
+        self.connect((self.blocks_stream_mux_0, 0), (self.qtgui_time_sink_x_0, 0))
+>>>>>>> Stashed changes
         self.connect((self.blocks_throttle_0, 0), (self.blocks_stream_mux_0, 0))
         self.connect((self.digital_cpmmod_bc_0, 0), (self.qtgui_freq_sink_x_0, 0))
         self.connect((self.digital_cpmmod_bc_0, 0), (self.qtgui_time_sink_x_0, 0))

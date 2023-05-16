@@ -597,8 +597,12 @@ blocks:
     bus_structure: null
     coordinate: [624, 1320.0]
     rotation: 0
+<<<<<<< Updated upstream
     state: enabled
 >>>>>>> parent of d7008b8 (commit for restore point)
+=======
+    state: disabled
+>>>>>>> Stashed changes
 - name: blocks_stream_mux_0_1
   id: blocks_stream_mux
   parameters:
@@ -1344,9 +1348,12 @@ connections:
 - [blocks_complex_to_float_0, '1', blocks_null_sink_1, '0']
 - [blocks_complex_to_float_1, '0', qtgui_time_sink_x_2, '0']
 - [blocks_complex_to_float_1, '1', blocks_null_sink_2_0, '0']
+<<<<<<< Updated upstream
 - [blocks_complex_to_float_2_0, '0', qtgui_time_sink_x_2_0, '0']
 - [blocks_complex_to_float_2_0, '1', blocks_null_sink_0, '0']
 - [blocks_complex_to_interleaved_char_0, '0', digital_cpmmod_bc_0, '0']
+=======
+>>>>>>> Stashed changes
 - [blocks_delay_0, '0', blocks_add_xx_0, '0']
 - [blocks_delay_0, '0', blocks_delay_1, '0']
 - [blocks_delay_0, '0', channels_channel_model_0, '0']
