@@ -395,7 +395,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [992, 848.0]
+    coordinate: [1240, 872.0]
     rotation: 0
     state: enabled
 - name: blocks_delay_0_0
@@ -574,9 +574,31 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1056, 432.0]
+    coordinate: [1016, 744.0]
     rotation: 0
     state: true
+<<<<<<< HEAD
+=======
+- name: blocks_stream_mux_0_0
+  id: blocks_stream_mux
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    lengths: (18750,18750)
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '2'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [624, 1320.0]
+    rotation: 0
+    state: enabled
+>>>>>>> parent of d7008b8 (commit for restore point)
 - name: blocks_stream_mux_0_1
   id: blocks_stream_mux
   parameters:
@@ -703,9 +725,13 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
+<<<<<<< HEAD
     coordinate: [1648, 816.0]
+=======
+    coordinate: [1536, 916.0]
+>>>>>>> parent of d7008b8 (commit for restore point)
     rotation: 0
-    state: enabled
+    state: true
 - name: epy_block_1_0
   id: epy_block
   parameters:
@@ -995,7 +1021,11 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
+<<<<<<< HEAD
     coordinate: [1920, 620.0]
+=======
+    coordinate: [1640, 772.0]
+>>>>>>> parent of d7008b8 (commit for restore point)
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_1
@@ -1189,7 +1219,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2000, 1044.0]
+    coordinate: [1888, 876.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_2_0
