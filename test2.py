@@ -34,7 +34,6 @@ import signal
 from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
 from gnuradio import eng_notation
-from gnuradio import gr, digital, analog
 from gnuradio.qtgui import Range, RangeWidget
 from PyQt5 import QtCore
 import test2_epy_block_1 as epy_block_1  # embedded python block
@@ -81,22 +80,38 @@ class test2(gr.top_block, Qt.QWidget):
         ##################################################
         # Variables
         ##################################################
-        self.variable_function_probe_0 = variable_function_probe_0 = 5000
-        self.variable_qtgui_range_0 = variable_qtgui_range_0 = 0
+        self.Frequency_Slider = Frequency_Slider = 10000
+        self.frequency = frequency = Frequency_Slider
         self.variable_qtgui_chooser_0 = variable_qtgui_chooser_0 = 0
-        self.variable_0 = variable_0 = (10000,5000,2500,1250)
-        self.samp_rate = samp_rate = 500000
-        self.frequency = frequency = 10000
-        self.delay = delay = variable_function_probe_0
+        self.variable_0 = variable_0 = (int(frequency),int(frequency/2),int(frequency/4),int(frequency/8))
+        self.samp_rate = samp_rate = 5000000
+        self.delay2 = delay2 = 3000
+        self.delay = delay = 5000
+        self.Noise_Amp = Noise_Amp = 0
 
         ##################################################
         # Blocks
         ##################################################
 
-        self._variable_qtgui_range_0_range = Range(0, 100, 0.05, 0, 200)
-        self._variable_qtgui_range_0_win = RangeWidget(self._variable_qtgui_range_0_range, self.set_variable_qtgui_range_0, "'variable_qtgui_range_0'", "counter_slider", float, QtCore.Qt.Horizontal)
-        self.top_layout.addWidget(self._variable_qtgui_range_0_win)
-        self.blocks_probe_signal_x_0 = blocks.probe_signal_f()
+        self.probe1 = blocks.probe_signal_f()
+        def _delay_probe():
+          while True:
+
+            val = self.my_block_0.probe1()
+            try:
+              try:
+                self.doc.add_next_tick_callback(functools.partial(self.set_delay,val))
+              except AttributeError:
+                self.set_delay(val)
+            except AttributeError:
+              pass
+            time.sleep(1.0 / (samp_rate))
+        _delay_thread = threading.Thread(target=_delay_probe)
+        _delay_thread.daemon = True
+        _delay_thread.start()
+        self._Noise_Amp_range = Range(0, 100, 0.05, 0, 200)
+        self._Noise_Amp_win = RangeWidget(self._Noise_Amp_range, self.set_Noise_Amp, "'Noise_Amp'", "counter_slider", float, QtCore.Qt.Horizontal)
+        self.top_layout.addWidget(self._Noise_Amp_win)
         # Create the options list
         self._variable_qtgui_chooser_0_options = [0, 1000, 2]
         # Create the labels list
@@ -113,21 +128,6 @@ class test2(gr.top_block, Qt.QWidget):
             lambda i: self.set_variable_qtgui_chooser_0(self._variable_qtgui_chooser_0_options[i]))
         # Create the radio buttons
         self.top_layout.addWidget(self._variable_qtgui_chooser_0_tool_bar)
-        def _variable_function_probe_0_probe():
-          while True:
-
-            val = self.Something.blocks_probe_signal_x_0()
-            try:
-              try:
-                self.doc.add_next_tick_callback(functools.partial(self.set_variable_function_probe_0,val))
-              except AttributeError:
-                self.set_variable_function_probe_0(val)
-            except AttributeError:
-              pass
-            time.sleep(1.0 / (samp_rate))
-        _variable_function_probe_0_thread = threading.Thread(target=_variable_function_probe_0_probe)
-        _variable_function_probe_0_thread.daemon = True
-        _variable_function_probe_0_thread.start()
         self.qtgui_time_sink_x_2 = qtgui.time_sink_f(
             1024, #size
             samp_rate, #samp_rate
@@ -227,66 +227,25 @@ class test2(gr.top_block, Qt.QWidget):
 
         self._qtgui_time_sink_x_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0.qwidget(), Qt.QWidget)
         self.top_layout.addWidget(self._qtgui_time_sink_x_0_win)
-        self.qtgui_freq_sink_x_0 = qtgui.freq_sink_c(
-            1024, #size
-            window.WIN_BLACKMAN_hARRIS, #wintype
-            0, #fc
-            samp_rate, #bw
-            "", #name
-            1,
-            None # parent
-        )
-        self.qtgui_freq_sink_x_0.set_update_time(0.10)
-        self.qtgui_freq_sink_x_0.set_y_axis((-140), 10)
-        self.qtgui_freq_sink_x_0.set_y_label('Relative Gain', 'dB')
-        self.qtgui_freq_sink_x_0.set_trigger_mode(qtgui.TRIG_MODE_FREE, 0.0, 0, "")
-        self.qtgui_freq_sink_x_0.enable_autoscale(False)
-        self.qtgui_freq_sink_x_0.enable_grid(False)
-        self.qtgui_freq_sink_x_0.set_fft_average(1.0)
-        self.qtgui_freq_sink_x_0.enable_axis_labels(True)
-        self.qtgui_freq_sink_x_0.enable_control_panel(False)
-        self.qtgui_freq_sink_x_0.set_fft_window_normalized(False)
-
-
-
-        labels = ['', '', '', '', '',
-            '', '', '', '', '']
-        widths = [1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1]
-        colors = ["blue", "red", "green", "black", "cyan",
-            "magenta", "yellow", "dark red", "dark green", "dark blue"]
-        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
-            1.0, 1.0, 1.0, 1.0, 1.0]
-
-        for i in range(1):
-            if len(labels[i]) == 0:
-                self.qtgui_freq_sink_x_0.set_line_label(i, "Data {0}".format(i))
-            else:
-                self.qtgui_freq_sink_x_0.set_line_label(i, labels[i])
-            self.qtgui_freq_sink_x_0.set_line_width(i, widths[i])
-            self.qtgui_freq_sink_x_0.set_line_color(i, colors[i])
-            self.qtgui_freq_sink_x_0.set_line_alpha(i, alphas[i])
-
-        self._qtgui_freq_sink_x_0_win = sip.wrapinstance(self.qtgui_freq_sink_x_0.qwidget(), Qt.QWidget)
-        self.top_layout.addWidget(self._qtgui_freq_sink_x_0_win)
-        self.epy_block_1 = epy_block_1.CorrelationDelayEstimator(vectorsize=18750, sample_rate=samp_rate, delayinitial=delay)
-        self.digital_cpmmod_bc_0 = digital.cpmmod_bc(analog.cpm.LRC, 0.5, 4, 4, 0.3)
+        self.epy_block_1 = epy_block_1.CorrelationDelayEstimator(vectorsize=sum(variable_0), sample_rate=samp_rate)
         self.blocks_throttle_0 = blocks.throttle(gr.sizeof_gr_complex*1, samp_rate,True)
         self.blocks_stream_mux_0 = blocks.stream_mux(gr.sizeof_gr_complex*1, variable_0)
         self.blocks_null_sink_2_0 = blocks.null_sink(gr.sizeof_float*1)
         self.blocks_null_sink_1 = blocks.null_sink(gr.sizeof_float*1)
         self.blocks_delay_0 = blocks.delay(gr.sizeof_gr_complex*1, delay)
-        self.blocks_complex_to_interleaved_char_0 = blocks.complex_to_interleaved_char(False, 1.0)
         self.blocks_complex_to_float_1 = blocks.complex_to_float(1)
         self.blocks_complex_to_float_0 = blocks.complex_to_float(1)
         self.blocks_add_xx_0 = blocks.add_vcc(1)
         self.analog_sig_source_x_0_0_0_1 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, (frequency/8), 1, 0, 0)
         self.analog_sig_source_x_0_0_0_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, (frequency/4), 1, 0, 0)
-        self.analog_sig_source_x_0_0_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, 5000, 1, 0, 0)
-        self.analog_sig_source_x_0_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, 10000, 1, 0, 0)
-        self.analog_noise_source_x_0 = analog.noise_source_c(analog.GR_GAUSSIAN, variable_qtgui_range_0, 0)
+        self.analog_sig_source_x_0_0_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, (frequency/2), 1, 0, 0)
+        self.analog_sig_source_x_0_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, frequency, 1, 0, 0)
+        self.analog_noise_source_x_0 = analog.noise_source_c(analog.GR_GAUSSIAN, Noise_Amp, 0)
         self.analog_agc_xx_0 = analog.agc_cc((1e-4), 1.0, 1)
         self.analog_agc_xx_0.set_max_gain(65536)
+        self._Frequency_Slider_range = Range(0, 10**10, 1000, 10000, 200)
+        self._Frequency_Slider_win = RangeWidget(self._Frequency_Slider_range, self.set_Frequency_Slider, "'Frequency_Slider'", "counter_slider", float, QtCore.Qt.Horizontal)
+        self.top_layout.addWidget(self._Frequency_Slider_win)
 
 
         ##################################################
@@ -304,23 +263,13 @@ class test2(gr.top_block, Qt.QWidget):
         self.connect((self.blocks_complex_to_float_0, 0), (self.qtgui_time_sink_x_2, 1))
         self.connect((self.blocks_complex_to_float_1, 1), (self.blocks_null_sink_2_0, 0))
         self.connect((self.blocks_complex_to_float_1, 0), (self.qtgui_time_sink_x_2, 0))
-<<<<<<< Updated upstream
-        self.connect((self.blocks_complex_to_interleaved_char_0, 0), (self.digital_cpmmod_bc_0, 0))
-=======
->>>>>>> Stashed changes
         self.connect((self.blocks_delay_0, 0), (self.blocks_add_xx_0, 0))
         self.connect((self.blocks_stream_mux_0, 0), (self.blocks_complex_to_float_0, 0))
-        self.connect((self.blocks_stream_mux_0, 0), (self.blocks_complex_to_interleaved_char_0, 0))
         self.connect((self.blocks_stream_mux_0, 0), (self.blocks_delay_0, 0))
         self.connect((self.blocks_stream_mux_0, 0), (self.epy_block_1, 1))
-<<<<<<< Updated upstream
-=======
         self.connect((self.blocks_stream_mux_0, 0), (self.qtgui_time_sink_x_0, 0))
->>>>>>> Stashed changes
         self.connect((self.blocks_throttle_0, 0), (self.blocks_stream_mux_0, 0))
-        self.connect((self.digital_cpmmod_bc_0, 0), (self.qtgui_freq_sink_x_0, 0))
-        self.connect((self.digital_cpmmod_bc_0, 0), (self.qtgui_time_sink_x_0, 0))
-        self.connect((self.epy_block_1, 0), (self.blocks_probe_signal_x_0, 0))
+        self.connect((self.epy_block_1, 0), (self.probe1, 0))
 
 
     def closeEvent(self, event):
@@ -331,19 +280,23 @@ class test2(gr.top_block, Qt.QWidget):
 
         event.accept()
 
-    def get_variable_function_probe_0(self):
-        return self.variable_function_probe_0
+    def get_Frequency_Slider(self):
+        return self.Frequency_Slider
 
-    def set_variable_function_probe_0(self, variable_function_probe_0):
-        self.variable_function_probe_0 = variable_function_probe_0
-        self.set_delay(self.variable_function_probe_0)
+    def set_Frequency_Slider(self, Frequency_Slider):
+        self.Frequency_Slider = Frequency_Slider
+        self.set_frequency(self.Frequency_Slider)
 
-    def get_variable_qtgui_range_0(self):
-        return self.variable_qtgui_range_0
+    def get_frequency(self):
+        return self.frequency
 
-    def set_variable_qtgui_range_0(self, variable_qtgui_range_0):
-        self.variable_qtgui_range_0 = variable_qtgui_range_0
-        self.analog_noise_source_x_0.set_amplitude(self.variable_qtgui_range_0)
+    def set_frequency(self, frequency):
+        self.frequency = frequency
+        self.set_variable_0((int(self.frequency),int(self.frequency/2),int(self.frequency/4),int(self.frequency/8)))
+        self.analog_sig_source_x_0_0.set_frequency(self.frequency)
+        self.analog_sig_source_x_0_0_0.set_frequency((self.frequency/2))
+        self.analog_sig_source_x_0_0_0_0.set_frequency((self.frequency/4))
+        self.analog_sig_source_x_0_0_0_1.set_frequency((self.frequency/8))
 
     def get_variable_qtgui_chooser_0(self):
         return self.variable_qtgui_chooser_0
@@ -357,6 +310,7 @@ class test2(gr.top_block, Qt.QWidget):
 
     def set_variable_0(self, variable_0):
         self.variable_0 = variable_0
+        self.epy_block_1.vectorsize = sum(self.variable_0)
 
     def get_samp_rate(self):
         return self.samp_rate
@@ -369,17 +323,14 @@ class test2(gr.top_block, Qt.QWidget):
         self.analog_sig_source_x_0_0_0_1.set_sampling_freq(self.samp_rate)
         self.blocks_throttle_0.set_sample_rate(self.samp_rate)
         self.epy_block_1.sample_rate = self.samp_rate
-        self.qtgui_freq_sink_x_0.set_frequency_range(0, self.samp_rate)
         self.qtgui_time_sink_x_0.set_samp_rate(self.samp_rate)
         self.qtgui_time_sink_x_2.set_samp_rate(self.samp_rate)
 
-    def get_frequency(self):
-        return self.frequency
+    def get_delay2(self):
+        return self.delay2
 
-    def set_frequency(self, frequency):
-        self.frequency = frequency
-        self.analog_sig_source_x_0_0_0_0.set_frequency((self.frequency/4))
-        self.analog_sig_source_x_0_0_0_1.set_frequency((self.frequency/8))
+    def set_delay2(self, delay2):
+        self.delay2 = delay2
 
     def get_delay(self):
         return self.delay
@@ -387,7 +338,13 @@ class test2(gr.top_block, Qt.QWidget):
     def set_delay(self, delay):
         self.delay = delay
         self.blocks_delay_0.set_dly(int(self.delay))
-        self.epy_block_1.delayinitial = self.delay
+
+    def get_Noise_Amp(self):
+        return self.Noise_Amp
+
+    def set_Noise_Amp(self, Noise_Amp):
+        self.Noise_Amp = Noise_Amp
+        self.analog_noise_source_x_0.set_amplitude(self.Noise_Amp)
 
 
 
