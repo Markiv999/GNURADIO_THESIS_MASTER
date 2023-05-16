@@ -96,6 +96,7 @@ class test2(gr.top_block, Qt.QWidget):
         self._variable_qtgui_range_0_range = Range(0, 100, 0.05, 0, 200)
         self._variable_qtgui_range_0_win = RangeWidget(self._variable_qtgui_range_0_range, self.set_variable_qtgui_range_0, "'variable_qtgui_range_0'", "counter_slider", float, QtCore.Qt.Horizontal)
         self.top_layout.addWidget(self._variable_qtgui_range_0_win)
+        self.blocks_probe_signal_x_0 = blocks.probe_signal_f()
         # Create the options list
         self._variable_qtgui_chooser_0_options = [0, 1000, 2]
         # Create the labels list
@@ -115,7 +116,7 @@ class test2(gr.top_block, Qt.QWidget):
         def _variable_function_probe_0_probe():
           while True:
 
-            val = self.my_block_0.CorrelationDelayEstimator()
+            val = self.Something.blocks_probe_signal_x_0()
             try:
               try:
                 self.doc.add_next_tick_callback(functools.partial(self.set_variable_function_probe_0,val))
@@ -273,7 +274,6 @@ class test2(gr.top_block, Qt.QWidget):
         self.blocks_throttle_0 = blocks.throttle(gr.sizeof_gr_complex*1, samp_rate,True)
         self.blocks_stream_mux_0 = blocks.stream_mux(gr.sizeof_gr_complex*1, variable_0)
         self.blocks_null_sink_2_0 = blocks.null_sink(gr.sizeof_float*1)
-        self.blocks_null_sink_1_0 = blocks.null_sink(gr.sizeof_float*1)
         self.blocks_null_sink_1 = blocks.null_sink(gr.sizeof_float*1)
         self.blocks_delay_0 = blocks.delay(gr.sizeof_gr_complex*1, delay)
         self.blocks_complex_to_interleaved_char_0 = blocks.complex_to_interleaved_char(False, 1.0)
@@ -313,7 +313,7 @@ class test2(gr.top_block, Qt.QWidget):
         self.connect((self.blocks_throttle_0, 0), (self.blocks_stream_mux_0, 0))
         self.connect((self.digital_cpmmod_bc_0, 0), (self.qtgui_freq_sink_x_0, 0))
         self.connect((self.digital_cpmmod_bc_0, 0), (self.qtgui_time_sink_x_0, 0))
-        self.connect((self.epy_block_1, 0), (self.blocks_null_sink_1_0, 0))
+        self.connect((self.epy_block_1, 0), (self.blocks_probe_signal_x_0, 0))
 
 
     def closeEvent(self, event):

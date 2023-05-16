@@ -105,17 +105,17 @@ blocks:
 - name: variable_function_probe_0
   id: variable_function_probe
   parameters:
-    block_id: my_block_0
+    block_id: Something
     comment: ''
     function_args: ''
-    function_name: CorrelationDelayEstimator
+    function_name: blocks_probe_signal_x_0
     poll_rate: samp_rate
     value: '5000'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1856, 204.0]
+    coordinate: [704, 168.0]
     rotation: 0
     state: true
 - name: variable_qtgui_chooser_0
@@ -527,23 +527,6 @@ blocks:
     coordinate: [1960, 1360.0]
     rotation: 0
     state: enabled
-- name: blocks_null_sink_1_0
-  id: blocks_null_sink
-  parameters:
-    affinity: ''
-    alias: ''
-    bus_structure_sink: '[[0,],]'
-    comment: ''
-    num_inputs: '1'
-    type: float
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [2048, 952.0]
-    rotation: 0
-    state: enabled
 - name: blocks_null_sink_2_0
   id: blocks_null_sink
   parameters:
@@ -561,6 +544,20 @@ blocks:
     coordinate: [1960, 1440.0]
     rotation: 0
     state: enabled
+- name: blocks_probe_signal_x_0
+  id: blocks_probe_signal_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    type: float
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1904, 968.0]
+    rotation: 0
+    state: true
 - name: blocks_stream_mux_0
   id: blocks_stream_mux
   parameters:
@@ -656,7 +653,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1240, 288.0]
+    coordinate: [1096, 192.0]
     rotation: 0
     state: true
 - name: epy_block_1
@@ -706,7 +703,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1704, 908.0]
+    coordinate: [1648, 816.0]
     rotation: 0
     state: enabled
 - name: epy_block_1_0
@@ -1334,7 +1331,7 @@ connections:
 - [digital_cpmmod_bc_0, '0', blocks_complex_to_float_2_0, '0']
 - [digital_cpmmod_bc_0, '0', qtgui_freq_sink_x_0, '0']
 - [digital_cpmmod_bc_0, '0', qtgui_time_sink_x_0, '0']
-- [epy_block_1, '0', blocks_null_sink_1_0, '0']
+- [epy_block_1, '0', blocks_probe_signal_x_0, '0']
 
 metadata:
   file_format: 1

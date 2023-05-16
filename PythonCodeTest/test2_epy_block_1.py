@@ -33,6 +33,8 @@ class CorrelationDelayEstimator(gr.sync_block):
                 continue
 
             # calculate delay
+            
+            print(delay3)
             self.correlation_values = np.fft.ifft(np.fft.fft(self.range_clock_signal) * np.conj(np.fft.fft(self.sequential_signal)))
             self.sample_delay_count = np.argmax(np.abs(self.correlation_values))
             delay = self.vectorsize - self.sample_delay_count
@@ -41,6 +43,6 @@ class CorrelationDelayEstimator(gr.sync_block):
             output_items[0][:] = delay_in_micro_seconds
             self.i = 0
             print(delay)
-
+        
         self.j = 0
         return num_samples

@@ -85,6 +85,8 @@ class test2(gr.top_block, Qt.QWidget):
         self.frequency = frequency = 10000
         self.delay2 = delay2 = 3000
         self.delay = delay = 5000
+        global delay3
+        delay3=5000
 
         ##################################################
         # Blocks
@@ -332,6 +334,7 @@ def main(top_block_cls=test2, options=None):
     tb.start()
 
     tb.show()
+    
 
     def sig_handler(sig=None, frame=None):
         tb.stop()
