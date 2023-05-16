@@ -84,14 +84,20 @@ class test2(gr.top_block, Qt.QWidget):
         self.frequency = frequency = 10000
         self.delay = delay = 5000
 <<<<<<< HEAD
+<<<<<<< HEAD
         global delay3
         delay3=5000
 =======
+=======
+>>>>>>> parent of d7008b8 (commit for restore point)
         self.no_of_sources = no_of_sources = 10
         self.vectorsize= vectorsize=0
 
         #derived variables
         self.variable_0 = variable_0 = []
+<<<<<<< HEAD
+>>>>>>> parent of d7008b8 (commit for restore point)
+=======
 >>>>>>> parent of d7008b8 (commit for restore point)
 
         ##################################################

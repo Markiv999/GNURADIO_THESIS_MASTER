@@ -726,7 +726,11 @@ blocks:
     bus_source: false
     bus_structure: null
 <<<<<<< HEAD
+<<<<<<< HEAD
     coordinate: [1648, 816.0]
+=======
+    coordinate: [1536, 916.0]
+>>>>>>> parent of d7008b8 (commit for restore point)
 =======
     coordinate: [1536, 916.0]
 >>>>>>> parent of d7008b8 (commit for restore point)
@@ -1022,7 +1026,11 @@ blocks:
     bus_source: false
     bus_structure: null
 <<<<<<< HEAD
+<<<<<<< HEAD
     coordinate: [1920, 620.0]
+=======
+    coordinate: [1640, 772.0]
+>>>>>>> parent of d7008b8 (commit for restore point)
 =======
     coordinate: [1640, 772.0]
 >>>>>>> parent of d7008b8 (commit for restore point)
