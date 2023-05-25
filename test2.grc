@@ -51,7 +51,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1216, 64.0]
+    coordinate: [1160, 16.0]
     rotation: 0
     state: true
 - name: Noise_Amp
@@ -75,6 +75,55 @@ blocks:
     coordinate: [208, 8.0]
     rotation: 0
     state: true
+- name: SampleRateSlider
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: ''
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: '1000'
+    step: '10000'
+    stop: '100000000'
+    value: '500000'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1312, 16.0]
+    rotation: 0
+    state: true
+- name: delay
+  id: variable
+  parameters:
+    comment: ''
+    value: functionprobe
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [616, 12.0]
+    rotation: 0
+    state: disabled
+- name: delay
+  id: variable_function_probe
+  parameters:
+    block_id: probe1
+    comment: ''
+    function_args: ''
+    function_name: level
+    poll_rate: samp_rate
+    value: '5000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [584, 124.0]
+    rotation: 0
+    state: disabled
 - name: delay
   id: variable_qtgui_range
   parameters:
@@ -93,37 +142,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [704, 16.0]
+    coordinate: [400, 128.0]
     rotation: 0
-    state: disabled
-- name: delay
-  id: variable_function_probe
-  parameters:
-    block_id: my_block_0
-    comment: ''
-    function_args: ''
-    function_name: probe1
-    poll_rate: samp_rate
-    value: '5000'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [704, 176.0]
-    rotation: 0
-    state: true
-- name: delay2
-  id: variable
-  parameters:
-    comment: ''
-    value: '3000'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [616, 12.0]
-    rotation: 0
-    state: true
+    state: enabled
 - name: frequency
   id: variable
   parameters:
@@ -140,7 +161,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '5000000'
+    value: SampleRateSlider
   states:
     bus_sink: false
     bus_source: false
@@ -157,7 +178,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [832, 40.0]
+    coordinate: [768, 12.0]
     rotation: 0
     state: true
 - name: variable_qtgui_chooser_0
@@ -187,7 +208,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [992, 40.0]
+    coordinate: [952, 16.0]
     rotation: 0
     state: true
 - name: analog_agc_xx_0
@@ -248,7 +269,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [368, 448.0]
+    coordinate: [376, 440.0]
     rotation: 0
     state: enabled
 - name: analog_sig_source_x_0_0_0
@@ -383,7 +404,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1240, 872.0]
+    coordinate: [1168, 920.0]
     rotation: 0
     state: enabled
 - name: blocks_delay_0_0
@@ -478,7 +499,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [776, 1456.0]
+    coordinate: [1096, 1272.0]
     rotation: 0
     state: disabled
 - name: blocks_null_sink_1
@@ -495,7 +516,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1960, 1360.0]
+    coordinate: [1944, 1088.0]
     rotation: 0
     state: enabled
 - name: blocks_null_sink_2
@@ -512,9 +533,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1968, 1288.0]
+    coordinate: [1952, 944.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: blocks_null_sink_2_0
   id: blocks_null_sink
   parameters:
@@ -529,7 +550,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1960, 1440.0]
+    coordinate: [1992, 1320.0]
     rotation: 0
     state: enabled
 - name: blocks_stream_mux_0
@@ -548,7 +569,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1016, 744.0]
+    coordinate: [992, 544.0]
     rotation: 0
     state: true
 - name: blocks_stream_mux_0_0
@@ -567,7 +588,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [624, 1320.0]
+    coordinate: [1360, 1168.0]
     rotation: 0
     state: disabled
 - name: blocks_stream_mux_0_1
@@ -586,7 +607,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [920, 968.0]
+    coordinate: [872, 992.0]
     rotation: 0
     state: disabled
 - name: blocks_throttle_0
@@ -608,27 +629,6 @@ blocks:
     coordinate: [656, 552.0]
     rotation: 0
     state: true
-- name: channels_channel_model_0
-  id: channels_channel_model
-  parameters:
-    affinity: ''
-    alias: ''
-    block_tags: 'False'
-    comment: ''
-    epsilon: '1.0'
-    freq_offset: '0.0'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    noise_voltage: '1'
-    seed: '0'
-    taps: 1.0 + 1.0j
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1064, 1216.0]
-    rotation: 0
-    state: disabled
 - name: epy_block_1
   id: epy_block
   parameters:
@@ -671,36 +671,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1536, 916.0]
+    coordinate: [1608, 892.0]
     rotation: 0
     state: true
-- name: epy_block_1_0
-  id: epy_block
-  parameters:
-    _source_code: "import numpy as np\nfrom gnuradio import gr\n\nclass CorrelationDelayEstimator(gr.sync_block):\n\
-      \    def __init__(self, vectorsize=18750):\n        gr.sync_block.__init__(\n\
-      \            self,\n            name='CorrelationDelayEstimator',\n        \
-      \    in_sig=[np.float32, np.float32],\n            out_sig=[np.int32]\n    \
-      \    )\n\n        self.vectorsize = vectorsize\n\n    def work(self, input_items,\
-      \ output_items):\n        x = np.asarray(input_items[0])\n        y = np.asarray(input_items[1])\n\
-      \n        corr = np.correlate(x, y, mode='full')\n        delay = np.argmax(np.abs(corr))\
-      \ - self.vectorsize + 1\n\n        output_items[0][:] = delay\n        return\
-      \ len(output_items[0])\n"
-    affinity: ''
-    alias: ''
-    comment: ''
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    vectorsize: '18750'
-  states:
-    _io_cache: ('CorrelationDelayEstimator', 'CorrelationDelayEstimator', [('vectorsize',
-      '18750')], [('0', 'float', 1), ('1', 'float', 1)], [('0', 'int', 1)], '', ['vectorsize'])
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [0, 560.0]
-    rotation: 0
-    state: disabled
 - name: probe1
   id: blocks_probe_signal_x
   parameters:
@@ -713,93 +686,6 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [1928, 1024.0]
-    rotation: 0
-    state: true
-- name: qtgui_histogram_sink_x_0
-  id: qtgui_histogram_sink_x
-  parameters:
-    accum: 'False'
-    affinity: ''
-    alias: ''
-    alpha1: '1.0'
-    alpha10: '1.0'
-    alpha2: '1.0'
-    alpha3: '1.0'
-    alpha4: '1.0'
-    alpha5: '1.0'
-    alpha6: '1.0'
-    alpha7: '1.0'
-    alpha8: '1.0'
-    alpha9: '1.0'
-    autoscale: 'True'
-    axislabels: 'True'
-    bins: '100'
-    color1: '"blue"'
-    color10: '"dark blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
-    comment: ''
-    grid: 'False'
-    gui_hint: ''
-    label1: ''
-    label10: ''
-    label2: ''
-    label3: ''
-    label4: ''
-    label5: ''
-    label6: ''
-    label7: ''
-    label8: ''
-    label9: ''
-    legend: 'True'
-    marker1: '-1'
-    marker10: '-1'
-    marker2: '-1'
-    marker3: '-1'
-    marker4: '-1'
-    marker5: '-1'
-    marker6: '-1'
-    marker7: '-1'
-    marker8: '-1'
-    marker9: '-1'
-    name: '""'
-    nconnections: '1'
-    size: '1024'
-    style1: '1'
-    style10: '1'
-    style2: '1'
-    style3: '1'
-    style4: '1'
-    style5: '1'
-    style6: '1'
-    style7: '1'
-    style8: '1'
-    style9: '1'
-    type: float
-    update_time: '0.10'
-    width1: '1'
-    width10: '1'
-    width2: '1'
-    width3: '1'
-    width4: '1'
-    width5: '1'
-    width6: '1'
-    width7: '1'
-    width8: '1'
-    width9: '1'
-    xmax: '20000'
-    xmin: '0'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1936, 712.0]
     rotation: 0
     state: disabled
 - name: qtgui_time_sink_x_0
@@ -899,103 +785,6 @@ blocks:
     coordinate: [1640, 772.0]
     rotation: 0
     state: enabled
-- name: qtgui_time_sink_x_1
-  id: qtgui_time_sink_x
-  parameters:
-    affinity: ''
-    alias: ''
-    alpha1: '1.0'
-    alpha10: '1.0'
-    alpha2: '1.0'
-    alpha3: '1.0'
-    alpha4: '1.0'
-    alpha5: '1.0'
-    alpha6: '1.0'
-    alpha7: '1.0'
-    alpha8: '1.0'
-    alpha9: '1.0'
-    autoscale: 'True'
-    axislabels: 'True'
-    color1: blue
-    color10: dark blue
-    color2: red
-    color3: green
-    color4: black
-    color5: cyan
-    color6: magenta
-    color7: yellow
-    color8: dark red
-    color9: dark green
-    comment: ''
-    ctrlpanel: 'False'
-    entags: 'True'
-    grid: 'False'
-    gui_hint: ''
-    label1: Signal 1
-    label10: Signal 10
-    label2: Signal 2
-    label3: Signal 3
-    label4: Signal 4
-    label5: Signal 5
-    label6: Signal 6
-    label7: Signal 7
-    label8: Signal 8
-    label9: Signal 9
-    legend: 'True'
-    marker1: '-1'
-    marker10: '-1'
-    marker2: '-1'
-    marker3: '-1'
-    marker4: '-1'
-    marker5: '-1'
-    marker6: '-1'
-    marker7: '-1'
-    marker8: '-1'
-    marker9: '-1'
-    name: '""'
-    nconnections: '2'
-    size: '2048'
-    srate: samp_rate
-    stemplot: 'False'
-    style1: '1'
-    style10: '1'
-    style2: '1'
-    style3: '1'
-    style4: '1'
-    style5: '1'
-    style6: '1'
-    style7: '1'
-    style8: '1'
-    style9: '1'
-    tr_chan: '0'
-    tr_delay: '0'
-    tr_level: '0.0'
-    tr_mode: qtgui.TRIG_MODE_FREE
-    tr_slope: qtgui.TRIG_SLOPE_POS
-    tr_tag: '""'
-    type: float
-    update_time: '0.10'
-    width1: '1'
-    width10: '1'
-    width2: '1'
-    width3: '1'
-    width4: '1'
-    width5: '1'
-    width6: '1'
-    width7: '1'
-    width8: '1'
-    width9: '1'
-    ylabel: Amplitude
-    ymax: '1'
-    ymin: '-1'
-    yunit: '""'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1640, 636.0]
-    rotation: 0
-    state: disabled
 - name: qtgui_time_sink_x_2
   id: qtgui_time_sink_x
   parameters:
@@ -1090,7 +879,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1888, 876.0]
+    coordinate: [1960, 1196.0]
     rotation: 0
     state: enabled
 
@@ -1113,7 +902,6 @@ connections:
 - [blocks_delay_0, '0', blocks_add_xx_0, '0']
 - [blocks_delay_0, '0', blocks_delay_1, '0']
 - [blocks_delay_0, '0', blocks_stream_mux_0_0, '1']
-- [blocks_delay_0, '0', channels_channel_model_0, '0']
 - [blocks_delay_0_0, '0', blocks_stream_mux_0_1, '0']
 - [blocks_delay_0_1, '0', blocks_stream_mux_0_1, '1']
 - [blocks_delay_0_2, '0', blocks_stream_mux_0_1, '3']
@@ -1124,16 +912,12 @@ connections:
 - [blocks_stream_mux_0, '0', blocks_stream_mux_0_0, '0']
 - [blocks_stream_mux_0, '0', epy_block_1, '1']
 - [blocks_stream_mux_0, '0', qtgui_time_sink_x_0, '0']
-- [blocks_stream_mux_0, '0', qtgui_time_sink_x_1, '1']
 - [blocks_stream_mux_0_0, '0', blocks_add_xx_0, '0']
 - [blocks_stream_mux_0_1, '0', blocks_add_xx_0, '0']
 - [blocks_throttle_0, '0', blocks_delay_0_0, '0']
 - [blocks_throttle_0, '0', blocks_stream_mux_0, '0']
-- [channels_channel_model_0, '0', analog_agc_xx_0, '0']
-- [channels_channel_model_0, '0', blocks_complex_to_float_1, '0']
-- [channels_channel_model_0, '0', epy_block_1, '0']
+- [epy_block_1, '0', blocks_null_sink_2, '0']
 - [epy_block_1, '0', probe1, '0']
-- [epy_block_1, '0', qtgui_histogram_sink_x_0, '0']
 
 metadata:
   file_format: 1
