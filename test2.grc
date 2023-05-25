@@ -116,7 +116,7 @@ blocks:
     function_args: ''
     function_name: level
     poll_rate: samp_rate
-    value: '000'
+    value: '0'
   states:
     bus_sink: false
     bus_source: false
@@ -685,7 +685,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1904, 1016.0]
+    coordinate: [1872, 816.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_0

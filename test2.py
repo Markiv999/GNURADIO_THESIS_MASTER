@@ -46,7 +46,7 @@ from gnuradio import qtgui
 
 class test2(gr.top_block, Qt.QWidget):
 
-    def __init__(self):
+    def __init__(self, delayvalue):
         gr.top_block.__init__(self, "Not titled yet", catch_exceptions=True)
         Qt.QWidget.__init__(self)
         self.setWindowTitle("Not titled yet")
@@ -86,7 +86,7 @@ class test2(gr.top_block, Qt.QWidget):
         self.variable_qtgui_chooser_0 = variable_qtgui_chooser_0 = 0
         self.variable_0 = variable_0 = (int(frequency),int(frequency/2),int(frequency/4),int(frequency/8))
         self.samp_rate = samp_rate = SampleRateSlider
-        self.delay = delay = 000
+        self.delay = delay = delayvalue
         self.Noise_Amp = Noise_Amp = 0
 
         ##################################################
@@ -97,13 +97,14 @@ class test2(gr.top_block, Qt.QWidget):
         def _delay_probe():
           while True:
 
-            val = self.probe1.level()+2
+            val = self.probe1.level()
             try:
               try:
                 self.doc.add_next_tick_callback(functools.partial(self.set_delay,val))
+                val=val+2
               except AttributeError:
-                val=val 
                 self.set_delay(val)
+                print(val)
             except AttributeError:
               pass
             time.sleep(1.0 / (samp_rate))
