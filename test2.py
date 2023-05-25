@@ -37,6 +37,8 @@ from gnuradio import eng_notation
 from gnuradio.qtgui import Range, RangeWidget
 from PyQt5 import QtCore
 import test2_epy_block_1 as epy_block_1  # embedded python block
+import time
+import threading
 
 
 
@@ -84,16 +86,30 @@ class test2(gr.top_block, Qt.QWidget):
         self.variable_qtgui_chooser_0 = variable_qtgui_chooser_0 = 0
         self.variable_0 = variable_0 = (int(frequency),int(frequency/2),int(frequency/4),int(frequency/8))
         self.samp_rate = samp_rate = SampleRateSlider
-        self.delay = delay = 5000
+        self.delay = delay = 000
         self.Noise_Amp = Noise_Amp = 0
 
         ##################################################
         # Blocks
         ##################################################
 
-        self._delay_range = Range(0, 20000, 1, 5000, 200)
-        self._delay_win = RangeWidget(self._delay_range, self.set_delay, "'delay'", "counter_slider", float, QtCore.Qt.Horizontal)
-        self.top_layout.addWidget(self._delay_win)
+        self.probe1 = blocks.probe_signal_f()
+        def _delay_probe():
+          while True:
+
+            val = self.probe1.level()+2
+            try:
+              try:
+                self.doc.add_next_tick_callback(functools.partial(self.set_delay,val))
+              except AttributeError:
+                val=val 
+                self.set_delay(val)
+            except AttributeError:
+              pass
+            time.sleep(1.0 / (samp_rate))
+        _delay_thread = threading.Thread(target=_delay_probe)
+        _delay_thread.daemon = True
+        _delay_thread.start()
         self._Noise_Amp_range = Range(0, 100, 0.05, 0, 200)
         self._Noise_Amp_win = RangeWidget(self._Noise_Amp_range, self.set_Noise_Amp, "'Noise_Amp'", "counter_slider", float, QtCore.Qt.Horizontal)
         self.top_layout.addWidget(self._Noise_Amp_win)
@@ -259,6 +275,7 @@ class test2(gr.top_block, Qt.QWidget):
         self.connect((self.blocks_stream_mux_0, 0), (self.qtgui_time_sink_x_0, 0))
         self.connect((self.blocks_throttle_0, 0), (self.blocks_stream_mux_0, 0))
         self.connect((self.epy_block_1, 0), (self.blocks_null_sink_2, 0))
+        self.connect((self.epy_block_1, 0), (self.probe1, 0))
 
 
     def closeEvent(self, event):

@@ -116,14 +116,14 @@ blocks:
     function_args: ''
     function_name: level
     poll_rate: samp_rate
-    value: '5000'
+    value: '000'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
     coordinate: [584, 124.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: delay
   id: variable_qtgui_range
   parameters:
@@ -144,7 +144,7 @@ blocks:
     bus_structure: null
     coordinate: [400, 128.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: frequency
   id: variable
   parameters:
@@ -685,9 +685,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1928, 1024.0]
+    coordinate: [1904, 1016.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: qtgui_time_sink_x_0
   id: qtgui_time_sink_x
   parameters:
