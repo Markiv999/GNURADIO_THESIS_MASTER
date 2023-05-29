@@ -674,6 +674,30 @@ blocks:
     coordinate: [1608, 892.0]
     rotation: 0
     state: true
+- name: low_pass_filter_0
+  id: low_pass_filter
+  parameters:
+    affinity: ''
+    alias: ''
+    beta: '6.76'
+    comment: ''
+    cutoff_freq: '1000000000000000'
+    decim: '18750'
+    gain: '1'
+    interp: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samp_rate: samp_rate
+    type: fir_filter_fff
+    width: '1000000000000000'
+    win: window.WIN_HAMMING
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1736, 496.0]
+    rotation: 0
+    state: true
 - name: probe1
   id: blocks_probe_signal_x
   parameters:
@@ -685,7 +709,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1872, 816.0]
+    coordinate: [1968, 768.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_0
@@ -917,7 +941,8 @@ connections:
 - [blocks_throttle_0, '0', blocks_delay_0_0, '0']
 - [blocks_throttle_0, '0', blocks_stream_mux_0, '0']
 - [epy_block_1, '0', blocks_null_sink_2, '0']
-- [epy_block_1, '0', probe1, '0']
+- [epy_block_1, '0', low_pass_filter_0, '0']
+- [low_pass_filter_0, '0', probe1, '0']
 
 metadata:
   file_format: 1
