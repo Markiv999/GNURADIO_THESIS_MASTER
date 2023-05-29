@@ -123,7 +123,7 @@ blocks:
     bus_structure: null
     coordinate: [584, 124.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: delay
   id: variable_qtgui_range
   parameters:
@@ -144,7 +144,7 @@ blocks:
     bus_structure: null
     coordinate: [400, 128.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: frequency
   id: variable
   parameters:
@@ -607,7 +607,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [872, 992.0]
+    coordinate: [880, 984.0]
     rotation: 0
     state: disabled
 - name: blocks_throttle_0
@@ -632,31 +632,31 @@ blocks:
 - name: epy_block_1
   id: epy_block
   parameters:
-    _source_code: "import numpy as np\nfrom gnuradio import gr\n\nclass CorrelationDelayEstimator(gr.sync_block):\n\
-      \    def __init__(self, vectorsize=18750, sample_rate=500000):\n        gr.sync_block.__init__(\n\
+    _source_code: "import numpy as np\nfrom gnuradio import gr\n\nclass CorrelationDelayEstimator(gr.decim_block):\n\
+      \    def __init__(self, vectorsize=18750, sample_rate=500000):\n        gr.decim_block.__init__(\n\
       \            self,\n            name='CorrelationDelayEstimator',\n        \
-      \    in_sig=[np.complex64, np.complex64],\n            out_sig=[np.float32]\n\
-      \        )\n        self.vectorsize = vectorsize\n        self.range_clock_signal\
-      \ = np.zeros(vectorsize, dtype=np.complex64)\n        self.sequential_signal\
-      \ = np.zeros(vectorsize, dtype=np.complex64)\n        self.i = 0\n        self.j\
-      \ = 0\n        self.sample_rate = sample_rate\n        self.correlation_values\
-      \ = np.zeros(vectorsize, dtype=np.complex64)\n\n    def work(self, input_items,\
-      \ output_items):\n        sequential_signal = input_items[0][:]\n        range_clock_signal\
-      \ = input_items[1][:]\n        num_samples = sequential_signal.shape[0]\n  \
-      \      #print(num_samples)\n        \n       #while there are still values in\
-      \ the buffer\n        while self.j < num_samples:\n            if self.i < self.vectorsize:\n\
-      \                #Take the latest values from the buffer\n                self.range_clock_signal[self.i]\
-      \ = range_clock_signal[self.j]\n                self.sequential_signal[self.i]\
-      \ = sequential_signal[self.j]\n                output_items[0][self.j] = 0\n\
-      \                self.i += 1\n                self.j += 1            \n    \
-      \            continue\n\n            # calculate delay, then return to the while\
-      \ loop\n            self.correlation_values = np.fft.ifft(np.fft.fft(self.range_clock_signal)\
-      \ * np.conj(np.fft.fft(self.sequential_signal)))\n            self.sample_delay_count\
-      \ = np.argmax(np.abs(self.correlation_values))\n            delay = self.vectorsize\
-      \ - self.sample_delay_count\n            delay_in_micro_seconds = 10 ** 6 *\
-      \ delay / self.sample_rate\n\n            output_items[0][self.j] = delay_in_micro_seconds\n\
-      \            self.i = 0\n            print(delay)\n\n        self.j = 0\n  \
-      \      return num_samples"
+      \    in_sig=[np.complex64, np.complex64],\n            out_sig=[np.float32],\n\
+      \            decim=vectorsize\n        )\n        self.set_relative_rate(1.0/vectorsize)\n\
+      \        self.decimation = vectorsize\n        self.vectorsize = vectorsize\n\
+      \        self.range_clock_signal = np.zeros(vectorsize, dtype=np.complex64)\n\
+      \        self.sequential_signal = np.zeros(vectorsize, dtype=np.complex64)\n\
+      \        self.i = 0\n        self.j = 0\n        self.counter = 0\n        self.sample_rate\
+      \ = sample_rate\n        self.correlation_values = np.zeros(vectorsize, dtype=np.complex64)\n\
+      \n    def work(self, input_items, output_items):\n        sequential_signal\
+      \ = input_items[0]\n        range_clock_signal = input_items[1]\n        num_samples\
+      \ = sequential_signal.shape[0]\n        \n        # Process each sample in the\
+      \ input buffer\n        for k in range(num_samples):\n            if self.i\
+      \ < self.vectorsize:\n                # Take the latest values from the buffer\n\
+      \                self.range_clock_signal[self.i] = range_clock_signal[k]\n \
+      \               self.sequential_signal[self.i] = sequential_signal[k]\n    \
+      \            self.i += 1\n            else:\n                # Calculate delay\n\
+      \                self.correlation_values = np.fft.ifft(np.fft.fft(self.range_clock_signal)\
+      \ * np.conj(np.fft.fft(self.sequential_signal)))\n                self.sample_delay_count\
+      \ = np.argmax(np.abs(self.correlation_values))\n                delay = self.vectorsize\
+      \ - self.sample_delay_count\n                delay_in_micro_seconds = 10 **\
+      \ 6 * delay / self.sample_rate\n\n                output_items[0][0] = delay\n\
+      \                self.i = 0\n                print(delay)\n\n        self.j\
+      \ = 0\n        return num_samples // self.vectorsize\n"
     affinity: ''
     alias: ''
     comment: ''
@@ -674,30 +674,6 @@ blocks:
     coordinate: [1608, 892.0]
     rotation: 0
     state: true
-- name: low_pass_filter_0
-  id: low_pass_filter
-  parameters:
-    affinity: ''
-    alias: ''
-    beta: '6.76'
-    comment: ''
-    cutoff_freq: '1000000000000000'
-    decim: '18750'
-    gain: '1'
-    interp: '1'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    samp_rate: samp_rate
-    type: fir_filter_fff
-    width: '1000000000000000'
-    win: window.WIN_HAMMING
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1736, 496.0]
-    rotation: 0
-    state: true
 - name: probe1
   id: blocks_probe_signal_x
   parameters:
@@ -709,9 +685,159 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1968, 768.0]
+    coordinate: [1976, 760.0]
     rotation: 0
-    state: enabled
+    state: disabled
+- name: qtgui_histogram_sink_x_0
+  id: qtgui_histogram_sink_x
+  parameters:
+    accum: 'False'
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'True'
+    axislabels: 'True'
+    bins: '100'
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    grid: 'True'
+    gui_hint: ''
+    label1: ''
+    label10: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '""'
+    nconnections: '1'
+    size: '1024'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    type: float
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    xmax: '20000'
+    xmin: '-1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1864, 536.0]
+    rotation: 0
+    state: true
+- name: qtgui_number_sink_0
+  id: qtgui_number_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    autoscale: 'True'
+    avg: '0'
+    color1: ("black", "black")
+    color10: ("black", "black")
+    color2: ("black", "black")
+    color3: ("black", "black")
+    color4: ("black", "black")
+    color5: ("black", "black")
+    color6: ("black", "black")
+    color7: ("black", "black")
+    color8: ("black", "black")
+    color9: ("black", "black")
+    comment: ''
+    factor1: '1'
+    factor10: '1'
+    factor2: '1'
+    factor3: '1'
+    factor4: '1'
+    factor5: '1'
+    factor6: '1'
+    factor7: '1'
+    factor8: '1'
+    factor9: '1'
+    graph_type: qtgui.NUM_GRAPH_HORIZ
+    gui_hint: ''
+    label1: ''
+    label10: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    max: '1'
+    min: '-1'
+    name: '""'
+    nconnections: '1'
+    type: float
+    unit1: ''
+    unit10: ''
+    unit2: ''
+    unit3: ''
+    unit4: ''
+    unit5: ''
+    unit6: ''
+    unit7: ''
+    unit8: ''
+    unit9: ''
+    update_time: '0.10'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2040, 804.0]
+    rotation: 0
+    state: true
 - name: qtgui_time_sink_x_0
   id: qtgui_time_sink_x
   parameters:
@@ -824,7 +950,7 @@ blocks:
     alpha7: '1.0'
     alpha8: '1.0'
     alpha9: '1.0'
-    autoscale: 'False'
+    autoscale: 'True'
     axislabels: 'True'
     color1: blue
     color10: dark blue
@@ -941,8 +1067,9 @@ connections:
 - [blocks_throttle_0, '0', blocks_delay_0_0, '0']
 - [blocks_throttle_0, '0', blocks_stream_mux_0, '0']
 - [epy_block_1, '0', blocks_null_sink_2, '0']
-- [epy_block_1, '0', low_pass_filter_0, '0']
-- [low_pass_filter_0, '0', probe1, '0']
+- [epy_block_1, '0', probe1, '0']
+- [epy_block_1, '0', qtgui_histogram_sink_x_0, '0']
+- [epy_block_1, '0', qtgui_number_sink_0, '0']
 
 metadata:
   file_format: 1
