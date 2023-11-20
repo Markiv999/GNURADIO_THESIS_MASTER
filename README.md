@@ -2,7 +2,7 @@
 GNU radio files for thesis, repository still messy. 
 For a starter, look inside Delfi Board Correlation folder. 
 
-TransmissionTest2Final (+edited) .py is the file used for transmission and recording. Transformer.py is run for quadrature demodulation before correlation(grc(GNU Radio Companion) file of transformer is lost unfortunately). 
+TransmissionTest2Final.py and similar are the files used for transmission and recording. Transformer.py is run for quadrature demodulation before correlation(grc(GNU Radio Companion) file of transformer is lost unfortunately). 
 Any of the correlation files under Different Rate folder are reasonably upto date.
 
 To run these files, install GNU Radio libs using radioconda (https://github.com/ryanvolz/radioconda), then use that environment with any compiler.
